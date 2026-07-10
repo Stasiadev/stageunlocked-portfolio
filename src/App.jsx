@@ -154,7 +154,18 @@ function Nav({ onContact }) {
           padding: '9px 22px', borderRadius: 8, textDecoration: 'none',
           background: C.grad, color: '#fff', fontWeight: 600, fontSize: 13,
           fontFamily: FB, boxShadow: '0 4px 16px rgba(212,23,138,0.25)',
-        }}>
+        }}
+          onMouseMove={e => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            e.currentTarget.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px)`;
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.transform = 'translate(0, 0)';
+            e.currentTarget.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1)';
+          }}
+        >
           Hire Me
         </a>
       </div>
@@ -246,7 +257,18 @@ function Hero() {
             background: C.grad, color: '#fff', fontWeight: 600, fontSize: 15,
             fontFamily: FB, boxShadow: '0 6px 24px rgba(212,23,138,0.32)',
             display: 'inline-block',
-          }}>
+          }}
+            onMouseMove={e => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const x = e.clientX - rect.left - rect.width / 2;
+              const y = e.clientY - rect.top - rect.height / 2;
+              e.currentTarget.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px)`;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translate(0, 0)';
+              e.currentTarget.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1)';
+            }}
+          >
             View My Work
           </a>
           <a href="#contact" className="btn-outline" style={{
@@ -254,7 +276,18 @@ function Hero() {
             border: '1px solid rgba(255,255,255,0.14)', color: C.white,
             fontWeight: 500, fontSize: 15, fontFamily: FB, display: 'inline-block',
             background: 'transparent',
-          }}>
+          }}
+            onMouseMove={e => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const x = e.clientX - rect.left - rect.width / 2;
+              const y = e.clientY - rect.top - rect.height / 2;
+              e.currentTarget.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px)`;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translate(0, 0)';
+              e.currentTarget.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1)';
+            }}
+          >
             Get In Touch
           </a>
         </div>
@@ -838,7 +871,18 @@ function Contact() {
               background: C.grad, color: '#fff', fontWeight: 700, fontSize: 15,
               fontFamily: FB, boxShadow: '0 6px 28px rgba(212,23,138,0.35)',
               display: 'inline-block',
-            }}>
+            }}
+              onMouseMove={e => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                e.currentTarget.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px)`;
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translate(0, 0)';
+                e.currentTarget.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1)';
+              }}
+            >
               Email Me
             </a>
             <a href="https://www.linkedin.com/in/anastasia-m-916350356/"
@@ -848,7 +892,18 @@ function Contact() {
                 border: '1px solid rgba(255,255,255,0.14)', color: C.white,
                 fontWeight: 500, fontSize: 15, fontFamily: FB, display: 'inline-block',
                 background: 'transparent',
-              }}>
+              }}
+              onMouseMove={e => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                e.currentTarget.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px)`;
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translate(0, 0)';
+                e.currentTarget.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1)';
+              }}
+            >
               LinkedIn ↗
             </a>
           </div>
