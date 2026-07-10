@@ -677,6 +677,13 @@ function Skills() {
     { label: 'Tools & Practices', items: ['AWS', 'Docker', 'Git', 'Prisma', 'PostgreSQL', 'WordPress', 'Agile / Scrum', 'Performance Optimization', 'Cross-browser Testing'] },
   ];
 
+  const catColors = {
+    'Languages':              '#D4178A',
+    'Frameworks & Libraries': '#7B2DBE',
+    'Design & UX':            '#6366F1',
+    'Tools & Practices':      '#0EA5E9',
+  };
+
   return (
     <section id="skills" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -692,21 +699,37 @@ function Skills() {
           </h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 40 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 40 }}>
           {cats.map((cat, i) => (
-            <div key={i} className={`reveal reveal-d${i % 3}`}>
-              <p style={{
-                fontSize: 11, color: C.mg, letterSpacing: 2, marginBottom: 18,
-                fontWeight: 700, fontFamily: FB
-              }}>
-                {cat.label.toUpperCase()}
-              </p>
+            <div key={i} className={`reveal reveal-d${i % 3}`} style={{
+              background: 'rgba(255,255,255,0.025)',
+              border: `1px solid rgba(255,255,255,0.06)`,
+              borderLeft: `3px solid ${catColors[cat.label]}`,
+              borderRadius: 16,
+              padding: '28px 24px',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                <div style={{
+                  width: 8, height: 8, borderRadius: '50%',
+                  background: catColors[cat.label],
+                  boxShadow: `0 0 12px ${catColors[cat.label]}`,
+                }} />
+                <p style={{
+                  fontSize: 11, color: catColors[cat.label],
+                  letterSpacing: 2, fontWeight: 700,
+                  fontFamily: FB, margin: 0,
+                }}>
+                  {cat.label.toUpperCase()}
+                </p>
+              </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                 {cat.items.map(item => (
                   <span key={item} className="skill-pill" style={{
-                    padding: '9px 18px', borderRadius: 10, fontSize: 13, fontWeight: 500,
-                    background: C.glass, color: C.white,
-                    border: `1px solid ${C.border}`, fontFamily: FB,
+                    padding: '8px 16px', borderRadius: 10, fontSize: 13, fontWeight: 500,
+                    background: `${catColors[cat.label]}10`,
+                    color: C.white,
+                    border: `1px solid ${catColors[cat.label]}25`,
+                    fontFamily: FB,
                   }}>
                     {item}
                   </span>

@@ -79,10 +79,10 @@ body {
   cursor: default;
 }
 .skill-pill:hover {
-  background: linear-gradient(135deg, #D4178A, #7B2DBE) !important;
+  background: rgba(212,23,138,0.15) !important;
   color: #fff !important;
-  transform: translateY(-2px) scale(1.04);
-  border-color: transparent !important;
+  transform: translateY(-2px);
+  border-color: rgba(212,23,138,0.35) !important;
 }
 
 .nav-link {
