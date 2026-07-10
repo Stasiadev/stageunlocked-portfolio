@@ -1,7 +1,22 @@
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #07070F !important;
+  width: 100% !important;
+  overflow-x: hidden;
+}
+
+#root {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  background: #07070F !important;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
@@ -9,10 +24,9 @@ html {
 }
 
 body {
-  background: #07070F;
   color: #EEEEF5;
   font-family: 'DM Sans', sans-serif;
-  overflow-x: hidden;
+  overflow-y: scroll;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -59,14 +73,6 @@ body {
 .reveal-d2 { transition-delay: 0.2s; }
 .reveal-d3 { transition-delay: 0.3s; }
 
-.project-card {
-  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), border-color 0.3s ease, box-shadow 0.3s ease;
-}
-.project-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(212,23,138,0.35) !important;
-  box-shadow: 0 20px 60px rgba(212,23,138,0.12);
-}
 
 .skill-pill {
   transition: all 0.2s cubic-bezier(0.16,1,0.3,1);
@@ -121,4 +127,8 @@ body {
   border-color: #D4178A !important;
   color: #D4178A !important;
   background: rgba(212,23,138,0.08) !important;
+}
+
+*, a, button {
+  cursor: none !important;
 }
