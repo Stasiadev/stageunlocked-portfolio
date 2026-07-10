@@ -182,7 +182,7 @@ function Hero() {
     <>
     <section style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center',
-      position: 'relative', overflow: 'hidden',
+      position: 'relative', overflow: 'hidden', zIndex: 1,
       padding: 'clamp(100px,12vw,160px) clamp(24px,5vw,100px) 80px',
     }}>
       {/* Ambient orbs */}
@@ -364,7 +364,7 @@ function Hero() {
 // ── ABOUT ────────────────────────────────────────────────────────
 function About() {
   return (
-    <section id="about" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative' }}>
+    <section id="about" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
       <div style={{
         position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
         fontSize: 9, fontWeight: 700, color: '#1E1E2E',
@@ -581,7 +581,7 @@ function Projects({ onViewDashboard }) {
   ];
 
   return (
-    <section id="projects" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative' }}>
+    <section id="projects" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
       <div style={{
         position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
         fontSize: 9, fontWeight: 700, color: '#1E1E2E',
@@ -781,7 +781,7 @@ function Skills() {
   };
 
   return (
-    <section id="skills" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative' }}>
+    <section id="skills" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
       <div style={{
         position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
         fontSize: 9, fontWeight: 700, color: '#1E1E2E',
@@ -850,7 +850,7 @@ function Skills() {
 // ── CONTACT ──────────────────────────────────────────────────────
 function Contact() {
   return (
-    <section id="contact" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative' }}>
+    <section id="contact" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
       <div style={{
         position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
         fontSize: 9, fontWeight: 700, color: '#1E1E2E',
@@ -994,7 +994,7 @@ export default function App() {
   }
 
   return (
-    <div style={{ background: C.bg, minHeight: '100vh', color: C.white, width: '100%', overflowX: 'hidden' }}>
+    <div style={{ background: C.bg, minHeight: '100vh', color: C.white, width: '100%', overflowX: 'hidden', position: 'relative', zIndex: 1 }}>
       <div style={{
         position: 'fixed', inset: 0, zIndex: 1,
         pointerEvents: 'none',
