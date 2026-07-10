@@ -20,6 +20,44 @@ const C = {
 const FD = "'Syne', sans-serif";
 const FB = "'DM Sans', sans-serif";
 
+const STACK = [
+  'React', 'TypeScript', 'Next.js', 'TailwindCSS', 'Claude API',
+  'pgvector', 'Supabase', 'PostgreSQL', 'Python', 'Figma',
+  'Node.js', 'React Native', 'TensorFlow.js', 'REST APIs', 'Git',
+];
+
+const ROLES = [
+  'Design Engineer',
+  'Frontend Developer',
+  'AI/ML Integration Specialist',
+  'UX Engineer',
+  'Full-Stack Developer',
+];
+
+// ── ROLE CYCLE ───────────────────────────────────────────────────
+function RoleCycle() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setIndex(i => (i + 1) % ROLES.length), 2500);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <p style={{
+      fontSize: 'clamp(15px, 2vw, 20px)', color: C.dimLt, marginBottom: 20,
+      fontWeight: 300, letterSpacing: 0.5, fontFamily: FB, minHeight: '1.4em',
+    }}>
+      <span key={index} style={{
+        display: 'inline-block',
+        animation: 'roleFadeUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards',
+      }}>
+        {ROLES[index]}
+      </span>
+    </p>
+  );
+}
+
 // ── SCROLL REVEAL ────────────────────────────────────────────────
 function useReveal() {
   useEffect(() => {
@@ -89,6 +127,7 @@ function Nav({ onContact }) {
 // ── HERO ─────────────────────────────────────────────────────────
 function Hero() {
   return (
+    <>
     <section style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center',
       position: 'relative', overflow: 'hidden',
@@ -147,12 +186,7 @@ function Hero() {
         </h1>
 
         {/* Role */}
-        <p style={{
-          fontSize: 'clamp(15px, 2vw, 20px)', color: C.dimLt, marginBottom: 20,
-          fontWeight: 300, letterSpacing: 0.5, fontFamily: FB,
-        }}>
-          Software Engineer &nbsp;·&nbsp; Front-End Developer &nbsp;·&nbsp; UX/UI Designer
-        </p>
+        <RoleCycle />
 
         {/* Tagline */}
         <p style={{
@@ -207,8 +241,49 @@ function Hero() {
             </div>
           ))}
         </div>
+
+        {/* Scroll indicator */}
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
+          gap: 8, marginTop: 48, opacity: 0.4,
+        }}>
+          <span style={{ fontSize: 10, letterSpacing: 3, color: C.dimLt, fontFamily: FB, fontWeight: 600 }}>
+            SCROLL
+          </span>
+          <div style={{
+            width: 1, height: 48, background: C.grad,
+            animation: 'scrollPulse 2s ease-in-out infinite',
+          }} />
+        </div>
       </div>
     </section>
+
+    {/* Tech stack marquee */}
+    <div style={{
+      overflow: 'hidden', borderTop: `1px solid ${C.border}`,
+      borderBottom: `1px solid ${C.border}`,
+      padding: '18px 0', background: 'rgba(255,255,255,0.015)',
+    }}>
+      <div style={{
+        display: 'flex', gap: 48, animation: 'marquee 28s linear infinite',
+        width: 'max-content',
+      }}>
+        {[...STACK, ...STACK].map((item, i) => (
+          <span key={i} style={{
+            fontSize: 13, fontWeight: 600, color: C.dimLt,
+            fontFamily: FB, letterSpacing: 0.5, whiteSpace: 'nowrap',
+            display: 'flex', alignItems: 'center', gap: 10,
+          }}>
+            <span style={{
+              width: 5, height: 5, borderRadius: '50%',
+              background: C.mg, display: 'inline-block', opacity: 0.7,
+            }} />
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+    </>
   );
 }
 
