@@ -938,6 +938,7 @@ function Footer() {
 // ── ROOT ─────────────────────────────────────────────────────────
 export default function App() {
   const [showDashboard, setShowDashboard] = useState(false);
+  const [scrollPct, setScrollPct] = useState(0);
   useReveal();
 
   useEffect(() => {
@@ -945,6 +946,15 @@ export default function App() {
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
     return () => lenis.destroy();
+  }, []);
+
+  useEffect(() => {
+    const fn = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollPct(h > 0 ? (window.scrollY / h) * 100 : 0);
+    };
+    window.addEventListener('scroll', fn, { passive: true });
+    return () => window.removeEventListener('scroll', fn);
   }, []);
 
   if (showDashboard) {
@@ -963,6 +973,17 @@ export default function App() {
       }} />
       <GlassBubbles />
       <CustomCursor />
+      <div style={{
+        position: 'fixed', left: 0, top: 0, bottom: 0,
+        width: 2, zIndex: 999, pointerEvents: 'none',
+        background: 'rgba(255,255,255,0.04)',
+      }}>
+        <div style={{
+          width: '100%', height: `${scrollPct}%`,
+          background: 'linear-gradient(180deg, #D4178A, #7B2DBE)',
+          transition: 'height 0.1s linear',
+        }} />
+      </div>
       <Nav />
       <Hero />
       <About />
