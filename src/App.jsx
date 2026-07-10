@@ -394,6 +394,7 @@ function Projects({ onViewDashboard }) {
     {
       img: '/screenshots/chromata.png',
       title: 'Chromata',
+      span: 'col-span-3',
       desc: 'AI-powered design token generator. Describe a brand or mood and get a complete color palette, typography pairing, and exportable JSON design system instantly.',
       tags: ['React', 'Claude API', 'Design Systems'],
       live: true,
@@ -404,6 +405,7 @@ function Projects({ onViewDashboard }) {
     {
       img: '/screenshots/meridian.png',
       title: 'Meridian',
+      span: 'col-span-3',
       desc: 'Financial analytics dashboard with live KPI cards, sparklines, portfolio growth charts, channel breakdown, and top performers table across multiple time ranges.',
       tags: ['React', 'Recharts', 'Enterprise UI'],
       live: true,
@@ -414,6 +416,7 @@ function Projects({ onViewDashboard }) {
     {
       img: '/screenshots/forma.png',
       title: 'Forma',
+      span: 'col-span-2',
       desc: 'Animated marketing landing page with aurora glassmorphic design, fixed parallax blobs, scroll-triggered count-up stats, and IntersectionObserver card reveals.',
       tags: ['React', 'CSS Animation', 'Landing Page'],
       live: true,
@@ -424,6 +427,7 @@ function Projects({ onViewDashboard }) {
     {
       img: '/screenshots/altus.png',
       title: 'Altus',
+      span: 'col-span-2',
       desc: 'Travel app mobile UI kit featuring three complete iOS screens — home discovery, flight detail booking flow, and a dramatic dark boarding pass with live barcode.',
       tags: ['React', 'Mobile UI', 'Travel'],
       live: true,
@@ -434,6 +438,7 @@ function Projects({ onViewDashboard }) {
     {
       img: '/screenshots/forge.png',
       title: 'Forge',
+      span: 'col-span-2',
       desc: 'AI code review assistant with split-panel IDE layout. Paste any code and get a quality score, severity-categorized issues, and a refactored version with one click.',
       tags: ['React', 'Claude API', 'Developer Tools'],
       live: true,
@@ -444,6 +449,7 @@ function Projects({ onViewDashboard }) {
     {
       img: '/screenshots/nexus.png',
       title: 'Nexus',
+      span: 'col-span-2',
       desc: 'RAG-powered AI knowledge base demonstrating full-stack retrieval augmented generation — document library, vector search simulation, and streamed responses with source citations.',
       tags: ['React', 'Claude API', 'RAG / ML'],
       live: true,
@@ -454,6 +460,7 @@ function Projects({ onViewDashboard }) {
     {
       img: '/screenshots/fintrack.png',
       title: 'FINTRACK',
+      span: 'col-span-4',
       desc: 'Personal finance portfolio dashboard with fully working five-tab navigation — overview, holdings, analytics, live-searchable transactions, and settings with toggle controls.',
       tags: ['React', 'Recharts', 'Fintech'],
       live: true,
@@ -464,6 +471,7 @@ function Projects({ onViewDashboard }) {
     {
       img: '/screenshots/lumena.png',
       title: 'Lumena',
+      span: 'col-span-2',
       desc: 'PMU artistry studio booking flow — a six-step wizard covering service selection, style technique, artist profiles, calendar scheduling, consultation intake, and confirmation.',
       tags: ['React', 'Multi-step Form', 'Beauty Tech'],
       live: true,
@@ -474,6 +482,7 @@ function Projects({ onViewDashboard }) {
     {
       img: '/screenshots/aura.png',
       title: 'Aura',
+      span: 'col-span-3',
       desc: 'AI shade matching tool with live camera skin detection, sclera white balance correction, Claude Vision undertone analysis, and real cross-brand product recommendations.',
       tags: ['React', 'Claude Vision', 'Beauty Tech'],
       live: true,
@@ -501,11 +510,16 @@ function Projects({ onViewDashboard }) {
         </div>
 
         {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(6, 1fr)',
+          gridAutoRows: 'minmax(340px, auto)',
+          gap: 20,
+        }}>
           {projects.map((p, i) => (
             <div
               key={i}
-              className={`reveal project-card reveal-d${i}`}
+              className={`reveal project-card reveal-d${i} ${p.span}`}
               style={{
                 background: p.bg,
                 borderRadius: 24,
@@ -534,7 +548,7 @@ function Projects({ onViewDashboard }) {
                 alt={p.title}
                 style={{
                   width: '100%',
-                  height: 180,
+                  height: p.span === 'col-span-2' ? 180 : 220,
                   borderRadius: 12,
                   objectFit: 'cover',
                   objectPosition: 'top',
