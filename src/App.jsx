@@ -528,16 +528,23 @@ function Projects({ onViewDashboard }) {
                 display: 'flex',
                 flexDirection: 'column',
                 minHeight: 320,
-                transition: 'transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease, border-color 0.3s ease',
+                transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease, border-color 0.3s ease',
                 cursor: 'pointer',
               }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-8px)';
+              onMouseMove={e => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                e.currentTarget.style.transform =
+                  `perspective(1200px) rotateX(${-y * 8}deg) rotateY(${x * 8}deg) translateY(-6px) scale(1.01)`;
                 e.currentTarget.style.borderColor = 'rgba(212,23,138,0.45)';
-                e.currentTarget.style.boxShadow = '0 20px 60px rgba(212,23,138,0.25), 0 0 0 1px rgba(212,23,138,0.2)';
+                e.currentTarget.style.boxShadow =
+                  `0 24px 64px rgba(212,23,138,0.22), 0 0 0 1px rgba(212,23,138,0.18),
+                   ${x * 20}px ${y * 20}px 40px rgba(123,45,190,0.12)`;
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.transform =
+                  'perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';
                 e.currentTarget.style.borderColor = 'rgba(212,23,138,0.15)';
                 e.currentTarget.style.boxShadow = 'none';
               }}
