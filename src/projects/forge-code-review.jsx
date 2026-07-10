@@ -252,7 +252,6 @@ const IssueCard = memo(function IssueCard({ issue, index }) {
   return (
     <div
       className="fg-issue"
-      style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}
       role="button"
       tabIndex={0}
       aria-expanded={open}
