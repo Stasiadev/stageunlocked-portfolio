@@ -364,7 +364,15 @@ function Hero() {
 // ── ABOUT ────────────────────────────────────────────────────────
 function About() {
   return (
-    <section id="about" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)' }}>
+    <section id="about" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative' }}>
+      <div style={{
+        position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
+        fontSize: 9, fontWeight: 700, color: '#1E1E2E',
+        letterSpacing: '0.2em', fontFamily: FB,
+        writingMode: 'vertical-rl',
+      }}>
+        01
+      </div>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div className="reveal" style={{
           display: 'grid', gridTemplateColumns: 'clamp(240px,35%,380px) 1fr',
@@ -573,7 +581,15 @@ function Projects({ onViewDashboard }) {
   ];
 
   return (
-    <section id="projects" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)' }}>
+    <section id="projects" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative' }}>
+      <div style={{
+        position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
+        fontSize: 9, fontWeight: 700, color: '#1E1E2E',
+        letterSpacing: '0.2em', fontFamily: FB,
+        writingMode: 'vertical-rl',
+      }}>
+        02
+      </div>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
         {/* Header */}
@@ -765,7 +781,15 @@ function Skills() {
   };
 
   return (
-    <section id="skills" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)' }}>
+    <section id="skills" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative' }}>
+      <div style={{
+        position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
+        fontSize: 9, fontWeight: 700, color: '#1E1E2E',
+        letterSpacing: '0.2em', fontFamily: FB,
+        writingMode: 'vertical-rl',
+      }}>
+        03
+      </div>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div className="reveal" style={{ marginBottom: 56 }}>
           <p style={{
@@ -826,7 +850,15 @@ function Skills() {
 // ── CONTACT ──────────────────────────────────────────────────────
 function Contact() {
   return (
-    <section id="contact" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)' }}>
+    <section id="contact" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative' }}>
+      <div style={{
+        position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
+        fontSize: 9, fontWeight: 700, color: '#1E1E2E',
+        letterSpacing: '0.2em', fontFamily: FB,
+        writingMode: 'vertical-rl',
+      }}>
+        04
+      </div>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div className="reveal" style={{
           background: 'linear-gradient(135deg, rgba(212,23,138,0.07) 0%, rgba(123,45,190,0.07) 100%)',
