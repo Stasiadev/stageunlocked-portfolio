@@ -3,6 +3,7 @@ import CaseStudyModal from './CaseStudyModal.jsx'
 import Dashboard from './Dashboard.jsx'
 import CustomCursor from './CustomCursor.jsx'
 import GlassBubbles from './GlassBubbles.jsx'
+import Lenis from '@studio-freight/lenis'
 
 // ── DESIGN TOKENS ────────────────────────────────────────────────
 const C = {
@@ -843,6 +844,13 @@ function Footer() {
 export default function App() {
   const [showDashboard, setShowDashboard] = useState(false);
   useReveal();
+
+  useEffect(() => {
+    const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    return () => lenis.destroy();
+  }, []);
 
   if (showDashboard) {
     return <Dashboard onBack={() => setShowDashboard(false)} />;
