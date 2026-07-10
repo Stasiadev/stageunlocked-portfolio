@@ -335,7 +335,13 @@ function About() {
           </div>
 
           {/* Copy */}
-          <div>
+          <div style={{
+            background: 'rgba(255,255,255,0.025)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: 24,
+            padding: 'clamp(28px,4vw,48px)',
+          }}>
             <p style={{
               fontSize: 11, color: C.mg, letterSpacing: 2.5, marginBottom: 16,
               fontWeight: 700, fontFamily: FB
