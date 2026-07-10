@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import CaseStudyModal from './CaseStudyModal.jsx'
 import Dashboard from './Dashboard.jsx'
 import CustomCursor from './CustomCursor.jsx'
+import GlassBubbles from './GlassBubbles.jsx'
 
 // ── DESIGN TOKENS ────────────────────────────────────────────────
 const C = {
@@ -724,6 +725,7 @@ export default function App() {
 
   return (
     <div style={{ background: C.bg, minHeight: '100vh', color: C.white, width: '100%', overflowX: 'hidden' }}>
+      <GlassBubbles />
       <CustomCursor />
       <Nav />
       <Hero />
