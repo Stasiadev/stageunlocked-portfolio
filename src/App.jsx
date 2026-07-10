@@ -59,6 +59,43 @@ function RoleCycle() {
   );
 }
 
+// ── TEXT SCRAMBLE ────────────────────────────────────────────────
+const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%';
+
+function useScramble(text, duration = 900) {
+  const [display, setDisplay] = useState(text);
+
+  useEffect(() => {
+    const tickMs = 30;
+    const totalTicks = Math.round(duration / tickMs);
+    let tick = 0;
+
+    const id = setInterval(() => {
+      tick++;
+      const resolvedCount = Math.floor((tick / totalTicks) * text.length);
+      setDisplay(
+        text
+          .split('')
+          .map((ch, i) => {
+            if (ch === ' ') return ch;
+            return i < resolvedCount
+              ? ch
+              : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+          })
+          .join('')
+      );
+      if (tick >= totalTicks) {
+        setDisplay(text);
+        clearInterval(id);
+      }
+    }, tickMs);
+
+    return () => clearInterval(id);
+  }, [text, duration]);
+
+  return display;
+}
+
 // ── SCROLL REVEAL ────────────────────────────────────────────────
 function useReveal() {
   useEffect(() => {
@@ -127,6 +164,9 @@ function Nav({ onContact }) {
 
 // ── HERO ─────────────────────────────────────────────────────────
 function Hero() {
+  const firstName = useScramble('ANASTASIA');
+  const lastName = useScramble('MATADI');
+
   return (
     <>
     <section style={{
@@ -179,10 +219,10 @@ function Hero() {
           fontSize: 'clamp(56px, 9vw, 104px)',
           lineHeight: 0.95, letterSpacing: -2, marginBottom: 28,
         }}>
-          ANASTASIA
+          {firstName}
           <br />
           <span style={{ background: C.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            MATADI
+            {lastName}
           </span>
         </h1>
 
