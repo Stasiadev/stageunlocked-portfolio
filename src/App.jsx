@@ -400,7 +400,7 @@ function Hero() {
           <div style={{ height: 1, background: 'rgba(255,255,255,0.06)' }} />
 
           {/* Stats mini row */}
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
             {[['6+', 'Years'], ['15', 'Projects'], ['2', 'Industries']].map(([num, label]) => (
               <div key={label} style={{ textAlign: 'center' }}>
                 <div style={{
