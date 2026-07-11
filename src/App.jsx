@@ -206,7 +206,17 @@ function Hero() {
       }} />
 
       {/* Content */}
-      <div style={{ maxWidth: 820, animation: 'fadeUp 1s cubic-bezier(0.16,1,0.3,1) forwards', position: 'relative' }}>
+      <div className="hero-grid" style={{
+        maxWidth: 1200,
+        width: '100%',
+        display: 'grid',
+        gridTemplateColumns: '1fr auto',
+        gap: 'clamp(40px, 6vw, 100px)',
+        alignItems: 'center',
+        animation: 'fadeUp 1s cubic-bezier(0.16,1,0.3,1) forwards',
+        position: 'relative',
+      }}>
+      <div>
 
         {/* Status badge */}
         <div style={{
@@ -330,6 +340,92 @@ function Hero() {
           }} />
         </div>
       </div>
+
+      {/* Availability card */}
+      <div className="hero-card" style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+      }}>
+        <div style={{
+          background: 'rgba(255,255,255,0.04)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 24,
+          padding: '28px 24px',
+          width: '100%',
+          maxWidth: 300,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 20,
+          animation: 'fadeUp 1.2s cubic-bezier(0.16,1,0.3,1) forwards',
+          animationDelay: '0.3s',
+          opacity: 0,
+        }}>
+          {/* Status */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 8, height: 8, borderRadius: '50%',
+              background: '#10B981',
+              boxShadow: '0 0 10px #10B981',
+              animation: 'pulse 2s ease-in-out infinite',
+            }} />
+            <span style={{ fontSize: 12, color: '#10B981', fontWeight: 700, letterSpacing: 1.5, fontFamily: FB }}>
+              AVAILABLE NOW
+            </span>
+          </div>
+
+          {/* Divider */}
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.06)' }} />
+
+          {/* Details */}
+          {[
+            { label: 'Location',      value: 'Atlanta, GA · Remote' },
+            { label: 'Response Time', value: '< 24 hours' },
+            { label: 'Availability',  value: 'Immediate start' },
+            { label: 'Engagement',    value: 'W-2 · 1099 · Contract' },
+          ].map(item => (
+            <div key={item.label}>
+              <div style={{ fontSize: 9, color: '#5A5A7A', letterSpacing: 2, fontWeight: 700, fontFamily: FB, marginBottom: 4 }}>
+                {item.label.toUpperCase()}
+              </div>
+              <div style={{ fontSize: 13, color: '#EEEEF5', fontWeight: 500, fontFamily: FB }}>
+                {item.value}
+              </div>
+            </div>
+          ))}
+
+          {/* Divider */}
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.06)' }} />
+
+          {/* Stats mini row */}
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            {[['6+', 'Years'], ['15', 'Projects'], ['2', 'Industries']].map(([num, label]) => (
+              <div key={label} style={{ textAlign: 'center' }}>
+                <div style={{
+                  fontFamily: FD, fontSize: 20, fontWeight: 800,
+                  background: C.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                }}>{num}</div>
+                <div style={{ fontSize: 10, color: '#5A5A7A', marginTop: 2 }}>{label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <a href="mailto:Amatadi00@gmail.com" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            padding: '11px', borderRadius: 12,
+            background: C.grad,
+            color: '#fff', fontSize: 13, fontWeight: 700,
+            textDecoration: 'none', fontFamily: FB,
+            boxShadow: '0 4px 16px rgba(212,23,138,0.28)',
+          }}>
+            Let's Work Together →
+          </a>
+        </div>
+      </div>
+      </div>
     </section>
 
     {/* Tech stack marquee */}
@@ -376,17 +472,18 @@ function About() {
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div className="reveal" style={{
           display: 'grid', gridTemplateColumns: 'clamp(240px,35%,380px) 1fr',
-          gap: 'clamp(40px,6vw,100px)', alignItems: 'center',
+          gap: 'clamp(40px,6vw,100px)', alignItems: 'stretch',
         }}>
           {/* Avatar card */}
           <div style={{ position: 'relative' }}>
             <div style={{
-              aspectRatio: '1', borderRadius: 28,
+              borderRadius: 28,
               background: 'linear-gradient(135deg, rgba(212,23,138,0.12), rgba(123,45,190,0.12))',
               border: `1px solid rgba(212,23,138,0.15)`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 'clamp(60px,10vw,90px)',
-              position: 'relative', overflow: 'hidden', width: '100%'
+              position: 'relative', overflow: 'hidden', width: '100%',
+              height: '100%', minHeight: '320px'
             }}>
               <img
                 src="/photo.stage.png"
@@ -1086,8 +1183,8 @@ export default function App() {
       </div>
       <Nav />
       <Hero />
-      <About />
       <Projects onViewDashboard={() => setShowDashboard(true)} />
+      <About />
       <Skills />
       <Contact />
       <Footer />
