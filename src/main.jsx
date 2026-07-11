@@ -12,6 +12,12 @@ import Nexus from './projects/nexus-rag.jsx'
 import FINTRACK from './projects/fintrack.jsx'
 import Lumena from './projects/lumena-pmu-booking.jsx'
 import AuraShadeMatch from './projects/aura-shade-match.jsx'
+import Flux from './projects/flux-ecommerce.jsx'
+import Pulse from './projects/pulse-dashboard.jsx'
+import Vela from './projects/vela-travel-app.jsx'
+import Solara from './projects/solara-real-estate.jsx'
+import Zephyr from './projects/zephyr-hr-platform.jsx'
+import Beacon from './projects/beacon-restaurant.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -27,6 +33,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/projects/fintrack" element={<FINTRACK />} />
         <Route path="/projects/lumena" element={<Lumena />} />
         <Route path="/projects/aura" element={<AuraShadeMatch />} />
+        <Route path="/projects/flux" element={<Flux />} />
+        <Route path="/projects/pulse" element={<Pulse />} />
+        <Route path="/projects/vela" element={<Vela />} />
+        <Route path="/projects/solara" element={<Solara />} />
+        <Route path="/projects/zephyr" element={<Zephyr />} />
+        <Route path="/projects/beacon" element={<Beacon />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
