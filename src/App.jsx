@@ -623,7 +623,7 @@ function Projects({ onViewDashboard }) {
                 border: '1px solid rgba(212,23,138,0.15)',
                 display: 'flex',
                 flexDirection: 'column',
-                minHeight: 320,
+                minHeight: 0,
                 transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease, border-color 0.3s ease',
                 cursor: 'pointer',
               }}
@@ -686,7 +686,9 @@ function Projects({ onViewDashboard }) {
 
               <p style={{
                 color: C.dim, fontSize: 14, lineHeight: 1.75, flex: 1,
-                marginBottom: 24, fontWeight: 300, fontFamily: FB
+                marginBottom: 24, fontWeight: 300, fontFamily: FB,
+                display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
               }}>
                 {p.desc}
               </p>
