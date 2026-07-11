@@ -238,11 +238,25 @@ body {
 
   /* Hero name — reduce at small screens */
   .hero-name {
-    font-size: clamp(42px, 11vw, 64px) !important;
-    letter-spacing: -1px !important;
-    line-height: 0.95 !important;
+    font-size: clamp(30px, 9vw, 44px) !important;
+    letter-spacing: -0.5px !important;
+    line-height: 1.05 !important;
     overflow-wrap: break-word !important;
     word-break: break-word !important;
+  }
+
+  /* Status badge — too large relative to phone width */
+  .hero-badge {
+    padding: 6px 14px !important;
+  }
+  .hero-badge-text {
+    font-size: 9px !important;
+    letter-spacing: 1.2px !important;
+  }
+
+  /* Contact heading — reduce at small screens */
+  .contact-heading {
+    font-size: clamp(26px, 8vw, 38px) !important;
   }
 
   /* Grid items default to min-width: auto, which lets an unbreakable

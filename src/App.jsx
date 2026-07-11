@@ -219,7 +219,7 @@ function Hero() {
       <div>
 
         {/* Status badge */}
-        <div style={{
+        <div className="hero-badge" style={{
           display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 32,
           padding: '7px 18px', borderRadius: 100,
           border: '1px solid rgba(212,23,138,0.28)',
@@ -229,7 +229,7 @@ function Hero() {
             width: 7, height: 7, borderRadius: '50%', background: C.mg,
             animation: 'pulse 2.2s ease infinite', display: 'inline-block'
           }} />
-          <span style={{ fontSize: 11, color: C.mg, letterSpacing: 2, fontWeight: 600, fontFamily: FB }}>
+          <span className="hero-badge-text" style={{ fontSize: 11, color: C.mg, letterSpacing: 2, fontWeight: 600, fontFamily: FB }}>
             AVAILABLE FOR REMOTE ROLES
           </span>
         </div>
