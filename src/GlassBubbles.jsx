@@ -1,16 +1,16 @@
 const BUBBLES = [
-  { size: 55, left: 8,  top: 15, duration: 18, delay: 0,   anim: 'bubbleFloat1' },
-  { size: 30, left: 22, top: 70, duration: 22, delay: 3,   anim: 'bubbleFloat2' },
-  { size: 42, left: 75, top: 20, duration: 16, delay: 1,   anim: 'bubbleFloat3' },
-  { size: 25, left: 90, top: 55, duration: 24, delay: 5,   anim: 'bubbleFloat1' },
-  { size: 38, left: 45, top: 85, duration: 20, delay: 2,   anim: 'bubbleFloat2' },
-  { size: 45, left: 15, top: 45, duration: 19, delay: 4,   anim: 'bubbleFloat3' },
-  { size: 28, left: 60, top: 10, duration: 23, delay: 1.5, anim: 'bubbleFloat1' },
-  { size: 34, left: 85, top: 75, duration: 17, delay: 6,   anim: 'bubbleFloat2' },
-  { size: 25, left: 35, top: 30, duration: 21, delay: 3.5, anim: 'bubbleFloat3' },
-  { size: 44, left: 55, top: 60, duration: 25, delay: 0.5, anim: 'bubbleFloat1' },
-  { size: 30, left: 5,  top: 88, duration: 18, delay: 7,   anim: 'bubbleFloat2' },
-  { size: 36, left: 78, top: 40, duration: 22, delay: 2.5, anim: 'bubbleFloat3' },
+  { size: 55, left: 8,  top: 15, delay: 0,   animation: 'bubbleFloat1 18s ease-in-out infinite' },
+  { size: 30, left: 22, top: 70, delay: 3,   animation: 'bubbleFloat2 22s ease-in-out infinite' },
+  { size: 42, left: 75, top: 20, delay: 1,   animation: 'bubbleFloat3 16s ease-in-out infinite' },
+  { size: 25, left: 90, top: 55, delay: 5,   animation: 'bubbleFloat1 24s ease-in-out infinite' },
+  { size: 38, left: 45, top: 85, delay: 2,   animation: 'bubbleFloat2 20s ease-in-out infinite' },
+  { size: 45, left: 15, top: 45, delay: 4,   animation: 'bubbleFloat3 19s ease-in-out infinite' },
+  { size: 28, left: 60, top: 10, delay: 1.5, animation: 'bubbleFloat1 23s ease-in-out infinite' },
+  { size: 34, left: 85, top: 75, delay: 6,   animation: 'bubbleFloat2 17s ease-in-out infinite' },
+  { size: 25, left: 35, top: 30, delay: 3.5, animation: 'bubbleFloat3 21s ease-in-out infinite' },
+  { size: 44, left: 55, top: 60, delay: 0.5, animation: 'bubbleFloat1 25s ease-in-out infinite' },
+  { size: 30, left: 5,  top: 88, delay: 7,   animation: 'bubbleFloat2 18s ease-in-out infinite' },
+  { size: 36, left: 78, top: 40, delay: 2.5, animation: 'bubbleFloat3 22s ease-in-out infinite' },
 ];
 
 export default function GlassBubbles() {
@@ -42,7 +42,7 @@ export default function GlassBubbles() {
             `,
             pointerEvents: 'none',
             zIndex: -1,
-            animation: `${b.anim} ${b.duration}s ease-in-out infinite`,
+            animation: b.animation,
             animationDelay: `${b.delay}s`,
           }}
         />
