@@ -140,7 +140,7 @@ function Nav({ onContact }) {
       </div>
 
       {/* Desktop nav */}
-      <div style={{ display: 'flex', gap: 36, alignItems: 'center' }}>
+      <div className="nav-links" style={{ display: 'flex', gap: 36, alignItems: 'center' }}>
         {['About', 'Projects', 'Skills', 'Contact'].map(item => (
           <a key={item} href={`#${item.toLowerCase()}`} className="nav-link"
             style={{
@@ -180,7 +180,7 @@ function Hero() {
 
   return (
     <>
-    <section style={{
+    <section className="hero-section section-pad" style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center',
       position: 'relative', overflow: 'hidden', zIndex: 1,
       padding: 'clamp(100px,12vw,160px) clamp(24px,5vw,100px) 80px',
@@ -235,7 +235,7 @@ function Hero() {
         </div>
 
         {/* Name */}
-        <h1 style={{
+        <h1 className="hero-name" style={{
           fontFamily: FD, fontWeight: 800,
           fontSize: 'clamp(56px, 9vw, 104px)',
           lineHeight: 0.95, letterSpacing: -2, marginBottom: 28,
@@ -261,7 +261,7 @@ function Hero() {
         </p>
 
         {/* CTAs */}
-        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="hero-ctas" style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
           <a href="#projects" className="btn-primary" style={{
             padding: '15px 36px', borderRadius: 10, textDecoration: 'none',
             background: C.grad, color: '#fff', fontWeight: 600, fontSize: 15,
@@ -303,7 +303,7 @@ function Hero() {
         </div>
 
         {/* Stats row */}
-        <div style={{
+        <div className="hero-stats" style={{
           display: 'flex', gap: 48, marginTop: 64, paddingTop: 40,
           borderTop: `1px solid ${C.border}`
         }}>
@@ -460,7 +460,7 @@ function Hero() {
 // ── ABOUT ────────────────────────────────────────────────────────
 function About() {
   return (
-    <section id="about" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
+    <section id="about" className="section-pad" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
       <div style={{
         position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
         fontSize: 9, fontWeight: 700, color: '#1E1E2E',
@@ -470,13 +470,13 @@ function About() {
         01
       </div>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <div className="reveal" style={{
+        <div className="reveal about-grid" style={{
           display: 'grid', gridTemplateColumns: 'clamp(240px,35%,380px) 1fr',
           gap: 'clamp(40px,6vw,100px)', alignItems: 'stretch',
         }}>
           {/* Avatar card */}
           <div style={{ position: 'relative' }}>
-            <div style={{
+            <div className="about-photo-wrap" style={{
               borderRadius: 28,
               background: 'linear-gradient(135deg, rgba(212,23,138,0.12), rgba(123,45,190,0.12))',
               border: `1px solid rgba(212,23,138,0.15)`,
@@ -744,7 +744,7 @@ function Projects({ onViewDashboard }) {
   ];
 
   return (
-    <section id="projects" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
+    <section id="projects" className="section-pad" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
       <div style={{
         position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
         fontSize: 9, fontWeight: 700, color: '#1E1E2E',
@@ -769,7 +769,7 @@ function Projects({ onViewDashboard }) {
         </div>
 
         {/* Grid */}
-        <div style={{
+        <div className="projects-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(6, 1fr)',
           gridAutoRows: 'minmax(340px, auto)',
@@ -812,6 +812,7 @@ function Projects({ onViewDashboard }) {
               <img
                 src={p.img}
                 alt={p.title}
+                className="project-screenshot"
                 style={{
                   width: '100%',
                   height: p.span === 'col-span-2' ? 180 : 220,
@@ -946,7 +947,7 @@ function Skills() {
   };
 
   return (
-    <section id="skills" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
+    <section id="skills" className="section-pad" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
       <div style={{
         position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
         fontSize: 9, fontWeight: 700, color: '#1E1E2E',
@@ -968,9 +969,9 @@ function Skills() {
           </h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 40 }}>
+        <div className="skills-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 40 }}>
           {cats.map((cat, i) => (
-            <div key={i} className={`reveal reveal-d${i % 3}`} style={{
+            <div key={i} className={`reveal reveal-d${i % 3} skill-card`} style={{
               background: 'rgba(255,255,255,0.025)',
               border: `1px solid rgba(255,255,255,0.06)`,
               borderLeft: `3px solid ${catColors[cat.label]}`,
@@ -1015,7 +1016,7 @@ function Skills() {
 // ── CONTACT ──────────────────────────────────────────────────────
 function Contact() {
   return (
-    <section id="contact" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
+    <section id="contact" className="section-pad" style={{ padding: 'clamp(80px,10vw,130px) clamp(24px,5vw,100px)', position: 'relative', zIndex: 1 }}>
       <div style={{
         position: 'absolute', left: 'clamp(4px,1vw,12px)', top: 32,
         fontSize: 9, fontWeight: 700, color: '#1E1E2E',
@@ -1025,7 +1026,7 @@ function Contact() {
         04
       </div>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <div className="reveal" style={{
+        <div className="reveal contact-section" style={{
           background: 'linear-gradient(135deg, rgba(212,23,138,0.07) 0%, rgba(123,45,190,0.07) 100%)',
           border: '1px solid rgba(212,23,138,0.18)',
           borderRadius: 36, padding: 'clamp(48px,7vw,96px) clamp(32px,6vw,80px)',
@@ -1044,7 +1045,7 @@ function Contact() {
           }}>
             CONTACT
           </p>
-          <h2 style={{
+          <h2 className="contact-heading" style={{
             fontFamily: FD, fontWeight: 800,
             fontSize: 'clamp(40px,6vw,68px)', lineHeight: 1.1, marginBottom: 20
           }}>
@@ -1113,7 +1114,7 @@ function Contact() {
 // ── FOOTER ───────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{
+    <footer className="site-footer" style={{
       padding: '28px clamp(24px,5vw,100px)',
       borderTop: `1px solid ${C.border}`,
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',

@@ -176,3 +176,131 @@ body {
   0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.55; }
   50% { transform: translate(8px, -18px) scale(1.05); opacity: 0.6; }
 }
+
+/* ── TABLET (768px and below) ── */
+@media (max-width: 768px) {
+
+  /* Hero — collapse two-column grid to single column */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  /* Hide availability card on tablet and below */
+  .hero-card {
+    display: none !important;
+  }
+
+  /* About — stack photo above text */
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 48px !important;
+  }
+
+  /* About photo — fixed height when stacked */
+  .about-photo-wrap {
+    min-height: 320px !important;
+    max-width: 380px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+  }
+
+  /* Skills — single column */
+  .skills-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Projects bento — all spans become full width */
+  .col-span-2,
+  .col-span-3,
+  .col-span-4 {
+    grid-column: span 6 !important;
+  }
+
+  /* Project grid — switch to 1-column */
+  .projects-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Nav — hide desktop links */
+  .nav-links {
+    display: none !important;
+  }
+
+  /* Contact section padding */
+  .contact-section {
+    padding: clamp(32px, 6vw, 64px) clamp(20px, 4vw, 40px) !important;
+  }
+}
+
+/* ── PHONE (480px and below) ── */
+@media (max-width: 480px) {
+
+  /* Hero name — reduce at small screens */
+  .hero-name {
+    font-size: clamp(42px, 11vw, 64px) !important;
+    letter-spacing: -1px !important;
+    line-height: 0.95 !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+  }
+
+  /* Grid items default to min-width: auto, which lets an unbreakable
+     word (e.g. "ANASTASIA") force the column wider than the viewport
+     and get silently clipped by ancestor overflow:hidden. Let columns
+     shrink below their content's intrinsic width so hero-name can wrap. */
+  .hero-grid > div {
+    min-width: 0 !important;
+  }
+
+  /* Same unbreakable-word overflow as hero-name: "Something" is wider
+     than the contact card's content box at this width and was being
+     clipped by the card's overflow:hidden. */
+  .contact-heading {
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+  }
+
+  /* Hero — reduce padding */
+  .hero-section {
+    padding: 100px 20px 60px !important;
+  }
+
+  /* Stats row — reduce gap */
+  .hero-stats {
+    gap: 28px !important;
+  }
+
+  /* CTA buttons — stack on very small screens */
+  .hero-ctas {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  /* Section padding — reduce on phone */
+  .section-pad {
+    padding: clamp(60px, 10vw, 100px) 20px !important;
+  }
+
+  /* Card padding — tighter on phone */
+  .project-card {
+    padding: 20px !important;
+  }
+
+  /* Skills card padding */
+  .skill-card {
+    padding: 18px 16px !important;
+  }
+
+  /* Footer — stack */
+  .site-footer {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  /* Screenshot height — shorter on mobile */
+  .project-screenshot {
+    height: 140px !important;
+  }
+}
