@@ -129,7 +129,10 @@ body {
   background: rgba(212,23,138,0.08) !important;
 }
 
-*, a, button {
+.custom-cursor-zone,
+.custom-cursor-zone *,
+.custom-cursor-zone a,
+.custom-cursor-zone button {
   cursor: none !important;
 }
 

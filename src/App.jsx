@@ -1159,7 +1159,7 @@ export default function App() {
   }
 
   return (
-    <div style={{ background: C.bg, minHeight: '100vh', color: C.white, width: '100%', overflowX: 'hidden', position: 'relative', zIndex: 0 }}>
+    <div className="custom-cursor-zone" style={{ background: C.bg, minHeight: '100vh', color: C.white, width: '100%', overflowX: 'hidden', position: 'relative', zIndex: 0 }}>
       <div style={{
         position: 'fixed', inset: 0, zIndex: 1,
         pointerEvents: 'none',
