@@ -542,15 +542,16 @@ function About() {
               </span>
             </h2>
             <p style={{ color: C.dim, lineHeight: 1.85, marginBottom: 18, fontWeight: 300, fontSize: 15, fontFamily: FB }}>
-              I'm a Software Engineer and UX/UI Designer with 6+ years of experience building
-              web applications across tech and financial services. My edge is being equally
-              fluent in engineering and design — I can take a product from wireframe to
-              production without losing the intent of either.
+              I'm a Design Engineer with 6+ years of experience building web applications
+              across technology and financial services. Equally fluent in engineering and
+              design, I take products from wireframe to production without losing the
+              intent of either.
             </p>
             <p style={{ color: C.dim, lineHeight: 1.85, marginBottom: 36, fontWeight: 300, fontSize: 15, fontFamily: FB }}>
-              Currently completing my BS in Computer Science at WGU, building on an MS in
-              Computer Science and years of hands-on product development across React,
-              Python, Java, and Figma.
+              I hold an MS in Computer Science and a BBA from the University of Ghana and
+              am completing a BS in Computer Science at WGU as a U.S.-based complement to
+              my international education. My product-development experience spans React,
+              TypeScript, Python, Java, and Figma.
             </p>
 
             {/* Tags */}
