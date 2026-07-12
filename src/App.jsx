@@ -644,7 +644,7 @@ function Projects({ onViewDashboard }) {
     },
     {
       img: '/screenshots/fintrack.png',
-      title: 'FINTRACK',
+      title: 'Fintrack',
       span: 'col-span-4',
       desc: 'Personal finance portfolio dashboard with fully working five-tab navigation — overview, holdings, analytics, live-searchable transactions, and settings with toggle controls.',
       tags: ['React', 'Recharts', 'Fintech'],
