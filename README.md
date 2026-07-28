@@ -110,5 +110,5 @@ AI-powered projects (Chromata, Forge, Nexus, Aura) require an Anthropic API key.
 ## Contact
 
 **Email:** Amatadi00@gmail.com  
-**LinkedIn:** [linkedin.com/in/stageunlocked](https://linkedin.com/in/stageunlocked)  
+**LinkedIn:** [linkedin.com/in/stageunlocked](https://linkedin.com/in/anastasia-m-916350356/
 **Portfolio:** [stagedunlocked-portfolio.vercel.app](https://stagedunlocked-portfolio.vercel.app)
