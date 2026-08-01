@@ -15,43 +15,9 @@ import {
   Star, X, Check, Package,
 } from "lucide-react";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── API ─────────────────────────────────────────────────────────────────────
 
-const MENU_ITEMS = [
-  { id:1,  cat:"Starters",  name:"Truffle Arancini",        price:16, prep:12, emoji:"🍙", popular:true  },
-  { id:2,  cat:"Starters",  name:"Heirloom Tomato Salad",   price:14, prep:8,  emoji:"🥗", popular:false },
-  { id:3,  cat:"Starters",  name:"Burrata & Prosciutto",    price:18, prep:6,  emoji:"🧀", popular:true  },
-  { id:4,  cat:"Mains",     name:"Duck Breast Confit",      price:38, prep:22, emoji:"🦆", popular:true  },
-  { id:5,  cat:"Mains",     name:"Pan-Seared Sea Bass",     price:34, prep:18, emoji:"🐟", popular:false },
-  { id:6,  cat:"Mains",     name:"Grass-Fed Ribeye 12oz",   price:52, prep:24, emoji:"🥩", popular:true  },
-  { id:7,  cat:"Mains",     name:"Wild Mushroom Risotto",   price:28, prep:20, emoji:"🍄", popular:false },
-  { id:8,  cat:"Desserts",  name:"Valrhona Chocolate Tart", price:12, prep:5,  emoji:"🍫", popular:true  },
-  { id:9,  cat:"Desserts",  name:"Seasonal Sorbet",         price:9,  prep:3,  emoji:"🍧", popular:false },
-  { id:10, cat:"Drinks",    name:"Craft Cocktail",          price:14, prep:4,  emoji:"🍸", popular:false },
-];
-
-const TABLES = [
-  { id:1,  seats:2,  status:"available" },
-  { id:2,  seats:4,  status:"occupied",  guests:3, server:"Maya",  elapsed:42 },
-  { id:3,  seats:4,  status:"occupied",  guests:4, server:"Leo",   elapsed:18 },
-  { id:4,  seats:6,  status:"reserved",  time:"7:30 PM", name:"Johnson" },
-  { id:5,  seats:2,  status:"available" },
-  { id:6,  seats:8,  status:"occupied",  guests:7, server:"Priya", elapsed:61 },
-  { id:7,  seats:4,  status:"available" },
-  { id:8,  seats:2,  status:"cleaning"  },
-  { id:9,  seats:4,  status:"occupied",  guests:2, server:"Maya",  elapsed:9  },
-  { id:10, seats:6,  status:"reserved",  time:"8:00 PM", name:"Williams" },
-  { id:11, seats:2,  status:"available" },
-  { id:12, seats:4,  status:"occupied",  guests:4, server:"Leo",   elapsed:33 },
-];
-
-const initOrders = [
-  { id:"ORD-001", table:2, status:"ready",    items:[{name:"Duck Breast Confit",qty:1},{name:"Pan-Seared Sea Bass",qty:1},{name:"Truffle Arancini",qty:2}], total:102, time:38, server:"Maya" },
-  { id:"ORD-002", table:3, status:"cooking",  items:[{name:"Grass-Fed Ribeye 12oz",qty:2},{name:"Heirloom Tomato Salad",qty:1}],                             total:118, time:14, server:"Leo"  },
-  { id:"ORD-003", table:6, status:"pending",  items:[{name:"Wild Mushroom Risotto",qty:3},{name:"Burrata & Prosciutto",qty:2},{name:"Craft Cocktail",qty:6}], total:172, time:2,  server:"Priya"},
-  { id:"ORD-004", table:9, status:"cooking",  items:[{name:"Truffle Arancini",qty:1},{name:"Duck Breast Confit",qty:2}],                                      total:92,  time:9,  server:"Maya" },
-  { id:"ORD-005", table:12,status:"pending",  items:[{name:"Valrhona Chocolate Tart",qty:2},{name:"Seasonal Sorbet",qty:2}],                                  total:42,  time:1,  server:"Leo"  },
-];
+const BASE_URL = 'https://beacon-api-r5eo.onrender.com';
 
 const ORDER_STATUSES = ["pending","cooking","ready","delivered"];
 
@@ -124,15 +90,26 @@ const OrderCard = memo(function OrderCard({ order, onAdvance, onDeliver }) {
 // ─── Orders Tab ──────────────────────────────────────────────────────────────
 
 const OrdersTab = memo(function OrdersTab({ orders, setOrders }) {
-  const advance = useCallback((id)=>{
-    setOrders(prev=>prev.map(o=>{
-      if(o.id!==id)return o;
-      const idx=ORDER_STATUSES.indexOf(o.status);
-      return{...o,status:ORDER_STATUSES[Math.min(idx+1,ORDER_STATUSES.length-1)]};
-    }));
-  },[setOrders]);
+  const advance = useCallback(async (id)=>{
+    const order = orders.find(o=>o.id===id);
+    const next = ORDER_STATUSES[Math.min(ORDER_STATUSES.indexOf(order.status)+1, ORDER_STATUSES.length-1)];
 
-  const deliver = useCallback((id)=>{
+    await fetch(`${BASE_URL}/api/orders/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: next }),
+    });
+
+    setOrders(prev=>prev.map(o=>o.id===id?{...o,status:next}:o));
+  },[orders, setOrders]);
+
+  const deliver = useCallback(async (id)=>{
+    await fetch(`${BASE_URL}/api/orders/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'delivered' }),
+    });
+
     setOrders(prev=>prev.map(o=>o.id===id?{...o,status:"delivered"}:o));
   },[setOrders]);
 
@@ -177,7 +154,7 @@ const OrdersTab = memo(function OrdersTab({ orders, setOrders }) {
 
 // ─── Tables Tab ───────────────────────────────────────────────────────────────
 
-const TablesTab = memo(function TablesTab() {
+const TablesTab = memo(function TablesTab({ tables }) {
   const statusConfig = {
     available: {color:"#10B981",bg:"#F0FDF4",label:"Available"},
     occupied:  {color:"#F97316",bg:"#FFF7ED",label:"Occupied"},
@@ -186,11 +163,11 @@ const TablesTab = memo(function TablesTab() {
   };
 
   const summary = useMemo(()=>({
-    available:TABLES.filter(t=>t.status==="available").length,
-    occupied: TABLES.filter(t=>t.status==="occupied").length,
-    reserved: TABLES.filter(t=>t.status==="reserved").length,
-    guests:   TABLES.filter(t=>t.guests).reduce((s,t)=>s+(t.guests||0),0),
-  }),[]);
+    available:tables.filter(t=>t.status==="available").length,
+    occupied: tables.filter(t=>t.status==="occupied").length,
+    reserved: tables.filter(t=>t.status==="reserved").length,
+    guests:   tables.filter(t=>t.guests).reduce((s,t)=>s+(t.guests||0),0),
+  }),[tables]);
 
   return (
     <div className="bc-tables-tab">
@@ -208,7 +185,7 @@ const TablesTab = memo(function TablesTab() {
         ))}
       </div>
       <div className="bc-tables-grid">
-        {TABLES.map(t=>{
+        {tables.map(t=>{
           const cfg = statusConfig[t.status];
           return(
             <div key={t.id} className="bc-table-cell" style={{background:cfg.bg,borderColor:`${cfg.color}30`}}>
@@ -230,10 +207,10 @@ const TablesTab = memo(function TablesTab() {
 
 // ─── Menu Tab ─────────────────────────────────────────────────────────────────
 
-const MenuTab = memo(function MenuTab() {
+const MenuTab = memo(function MenuTab({ menuItems }) {
   const [activeCat, setActiveCat] = useState("All");
-  const cats = useMemo(()=>["All",...new Set(MENU_ITEMS.map(m=>m.cat))],[]);
-  const filtered = useMemo(()=>activeCat==="All"?MENU_ITEMS:MENU_ITEMS.filter(m=>m.cat===activeCat),[activeCat]);
+  const cats = useMemo(()=>["All",...new Set(menuItems.map(m=>m.cat))],[menuItems]);
+  const filtered = useMemo(()=>activeCat==="All"?menuItems:menuItems.filter(m=>m.cat===activeCat),[activeCat, menuItems]);
 
   return (
     <div className="bc-menu-tab">
@@ -263,13 +240,13 @@ const MenuTab = memo(function MenuTab() {
 
 // ─── Analytics Tab ────────────────────────────────────────────────────────────
 
-const AnalyticsTab = memo(function AnalyticsTab({ orders }) {
+const AnalyticsTab = memo(function AnalyticsTab({ orders, tables, menuItems }) {
   const stats = useMemo(()=>({
     revenue: orders.reduce((s,o)=>s+o.total,0),
     orders:  orders.length,
     avgTime: Math.round(orders.reduce((s,o)=>s+o.time,0)/orders.length),
-    occupied:TABLES.filter(t=>t.status==="occupied").length,
-  }),[orders]);
+    occupied:tables.filter(t=>t.status==="occupied").length,
+  }),[orders, tables]);
 
   return (
     <div className="bc-analytics-tab">
@@ -278,7 +255,7 @@ const AnalyticsTab = memo(function AnalyticsTab({ orders }) {
           {label:"Today's Revenue",  value:`$${(stats.revenue*8.4).toFixed(0)}`,    color:"#10B981",Icon:TrendingUp},
           {label:"Orders Today",     value:`${stats.orders*14}`,                    color:"#F97316",Icon:UtensilsCrossed},
           {label:"Avg Ticket",       value:`$${(stats.revenue*8.4/stats.orders/14).toFixed(0)}`,color:"#6366F1",Icon:Coffee},
-          {label:"Tables Occupied",  value:`${stats.occupied}/${TABLES.length}`,   color:"#0EA5E9",Icon:Users},
+          {label:"Tables Occupied",  value:`${stats.occupied}/${tables.length}`,   color:"#0EA5E9",Icon:Users},
         ].map(s=>(
           <div key={s.label} className="bc-analytics-stat">
             <div className="bc-stat-icon" style={{background:`${s.color}15`}}><s.Icon size={14} color={s.color}/></div>
@@ -289,7 +266,7 @@ const AnalyticsTab = memo(function AnalyticsTab({ orders }) {
       </div>
       <div className="bc-top-items">
         <div className="bc-section-label">Top Sellers Today</div>
-        {MENU_ITEMS.filter(m=>m.popular).map((item,i)=>(
+        {menuItems.filter(m=>m.popular).map((item,i)=>(
           <div key={item.id} className="bc-top-item">
             <div className="bc-top-rank">#{i+1}</div>
             <div className="bc-top-emoji">{item.emoji}</div>
@@ -394,11 +371,36 @@ const GlobalStyles=()=>(
 
 function BeaconCore() {
   const [tab, setTab] = useState(0);
-  const [orders, setOrders] = useState(initOrders);
+  const [orders, setOrders] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
+  const [tables, setTables] = useState([]);
+  const [loading, setLoading] = useState(true);
   useOrderTimer(orders, setOrders);
+
+  useEffect(() => {
+    Promise.all([
+      fetch(`${BASE_URL}/api/orders`).then(r => r.json()),
+      fetch(`${BASE_URL}/api/menu`).then(r => r.json()),
+      fetch(`${BASE_URL}/api/tables`).then(r => r.json()),
+    ]).then(([ordersData, menuData, tablesData]) => {
+      setOrders(ordersData);
+      setMenuItems(menuData);
+      setTables(tablesData);
+      setLoading(false);
+    });
+  }, []);
 
   const pendingCount = useMemo(()=>orders.filter(o=>o.status==="pending").length,[orders]);
   const readyCount   = useMemo(()=>orders.filter(o=>o.status==="ready").length,[orders]);
+
+  if (loading) return (
+    <>
+      <GlobalStyles/>
+      <div className="bc-root" style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh'}}>
+        <div style={{color:'#F97316',fontSize:14,fontFamily:"'Inter',sans-serif"}}>Loading Beacon...</div>
+      </div>
+    </>
+  );
 
   return (
     <>
@@ -426,9 +428,9 @@ function BeaconCore() {
           ))}
         </div>
         {tab===0&&<OrdersTab orders={orders} setOrders={setOrders}/>}
-        {tab===1&&<TablesTab/>}
-        {tab===2&&<MenuTab/>}
-        {tab===3&&<AnalyticsTab orders={orders}/>}
+        {tab===1&&<TablesTab tables={tables}/>}
+        {tab===2&&<MenuTab menuItems={menuItems}/>}
+        {tab===3&&<AnalyticsTab orders={orders} tables={tables} menuItems={menuItems}/>}
       </div>
     </>
   );
