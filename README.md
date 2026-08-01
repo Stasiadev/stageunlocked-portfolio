@@ -93,7 +93,7 @@ The `/backend` directory contains four Python/FastAPI backends — one for each 
 
 | Backend | Endpoints | Port | Description |
 |---|---|---|---|
-| `beacon/` | 8 | 8000 | Restaurant order management — menu, tables, orders, analytics |
+| `beacon/` | 8 | 8000 | Restaurant order management — [Live API](https://beacon-api-r5eo.onrender.com/docs) |
 | `zephyr/` | 11 | 8001 | HR platform — employee CRUD, onboarding tasks, leave approval, analytics |
 | `solara/` | 6 | 8002 | Real estate — property search and filtering, saved listings, agent contact |
 | `flux/` | 9 | 8003 | E-commerce — product catalog, cart management, checkout, order processing |
