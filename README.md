@@ -86,6 +86,28 @@ Every project consistently applies:
 
 ---
 
+## Backend
+
+The `/backend` directory contains a Python/FastAPI backend for the Beacon project — demonstrating REST API design, Pydantic data validation, status machine enforcement, and async Python in a web development context.
+
+| File | Description |
+|---|---|
+| `main.py` | FastAPI app — 8 endpoints covering menu, tables, orders, and analytics |
+| `models.py` | Pydantic v2 models for all request and response shapes |
+| `data.py` | Typed in-memory data store (production version would use PostgreSQL) |
+| `requirements.txt` | Dependencies: FastAPI, Uvicorn, Pydantic |
+
+**To run the backend:**
+```bash
+cd backend/beacon
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
+
+Interactive API docs auto-generated at `http://localhost:8000/docs`
+
+---
+
 ## Running Locally
 
 ```bash
@@ -110,5 +132,5 @@ AI-powered projects (Chromata, Forge, Nexus, Aura) require an Anthropic API key.
 ## Contact
 
 **Email:** Amatadi00@gmail.com  
-**LinkedIn:** [linkedin.com/in/stageunlocked](https://linkedin.com/in/anastasia-m-916350356/
-**Portfolio:** [stagedunlocked-portfolio.vercel.app](https://stagedunlocked-portfolio.vercel.app)
+**LinkedIn:** [linkedin.com/in/stageunlocked](https://linkedin.com/in/stageunlocked)  
+**Portfolio:** [stagedunlocked-portfolio.vercel.app](https://stagedunlocked-portfolio.vercel.app)portfolio.vercel.app)
