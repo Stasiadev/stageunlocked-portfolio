@@ -6,13 +6,14 @@
 
 ## About
 
-A collection of 15 production-quality projects spanning AI integration, full-stack interfaces, data visualization, mobile UX, and beauty tech. Each project is built with React and demonstrates senior-level engineering patterns — custom hooks, state machines, AbortController, memoization, and accessibility — applied correctly for each use case.
+A collection of 15 production-quality projects spanning AI integration, full-stack interfaces, data visualization, mobile UX, and beauty tech. Each project is built with React, with a Python/FastAPI backend for full-stack projects. Every project demonstrates senior-level engineering patterns — custom hooks, state machines, AbortController, memoization, and accessibility — applied correctly for each use case.
 
 ---
 
 ## Tech Stack
 
 **Frontend:** React, JavaScript, TailwindCSS, CSS Modules  
+**Backend:** Python, FastAPI, Pydantic, Uvicorn  
 **AI/ML:** Claude API (Anthropic), TensorFlow.js, RAG architecture  
 **Data:** recharts, pgvector, PostgreSQL  
 **Tooling:** Vite, Vercel, Git  
@@ -48,7 +49,7 @@ A collection of 15 production-quality projects spanning AI integration, full-sta
 |---------|-------------|-------|
 | **Solara** | Real estate listings platform — debounced property search, filter state machine, Set-based favorites, map view, property detail with agent contact flow | React |
 | **Zephyr** | HR & people operations — employee directory with search and filter, onboarding progress tracker, leave request management, headcount analytics | React |
-| **Beacon** | Restaurant order management — live kanban order board, table occupancy grid, menu management, real-time sales analytics | React |
+| **Beacon** | Restaurant order management — live kanban order board, table occupancy grid, menu management, real-time sales analytics. Includes a Python/FastAPI backend with full REST API, Pydantic validation, and status machine enforcement. | React · Python · FastAPI |
 | **Flux** | E-commerce checkout — single-page multi-step checkout, live credit card preview, cart state machine, shipping and payment validation | React |
 
 ---
@@ -132,5 +133,5 @@ AI-powered projects (Chromata, Forge, Nexus, Aura) require an Anthropic API key.
 ## Contact
 
 **Email:** Amatadi00@gmail.com  
-**LinkedIn:** [linkedin.com/in/stageunlocked](https://linkedin.com/in/stageunlocked)  
-**Portfolio:** [stagedunlocked-portfolio.vercel.app](https://stagedunlocked-portfolio.vercel.app)portfolio.vercel.app)
+**LinkedIn:** [linkedin.com/in/anastasia-m-916350356](https://linkedin.com/in/anastasia-m-916350356)  
+**Portfolio:** [stagedunlocked-portfolio.vercel.app](https://stagedunlocked-portfolio.vercel.app)
