@@ -1,7 +1,6 @@
 # Stage Unlocked — Design Engineering Portfolio
 
-**Anastasia Matadi** · Design Engineer · Atlanta, GA · [Live Portfolio](https://stagedunlocked-portfolio.vercel.app)
-
+**Anastasia Matadi** · Design Engineer · Atlanta, GA · [Live Portfolio](https://www.stageunlocked.com)
 ---
 
 ## About
@@ -94,9 +93,9 @@ The `/backend` directory contains four Python/FastAPI backends — one for each 
 | Backend | Endpoints | Port | Description |
 |---|---|---|---|
 | `beacon/` | 8 | 8000 | Restaurant order management — [Live API](https://beacon-api-r5eo.onrender.com/docs) |
-| `zephyr/` | 11 | 8001 | HR platform — employee CRUD, onboarding tasks, leave approval, analytics |
-| `solara/` | 6 | 8002 | Real estate — property search and filtering, saved listings, agent contact |
-| `flux/` | 9 | 8003 | E-commerce — product catalog, cart management, checkout, order processing |
+| `zephyr/` | 11 | 8001 | HR platform — [Live API](https://zephyr-api-nhdw.onrender.com/docs) |
+| `solara/` | 6 | 8002 | Real estate — [Live API](https://solara-api-jc92.onrender.com/docs) |
+| `flux/` | 9 | 8003 | E-commerce — [Live API](https://flux-api-jpbv.onrender.com/docs) |
 
 **To run any backend:**
 ```bash
@@ -134,4 +133,4 @@ AI-powered projects (Chromata, Forge, Nexus, Aura) require an Anthropic API key.
 
 **Email:** Amatadi00@gmail.com  
 **LinkedIn:** [linkedin.com/in/anastasia-m-916350356](https://linkedin.com/in/anastasia-m-916350356)  
-**Portfolio:** [stagedunlocked-portfolio.vercel.app](https://stagedunlocked-portfolio.vercel.app)
+**Portfolio:** [stageunlocked.com](https://www.stageunlocked.com)
