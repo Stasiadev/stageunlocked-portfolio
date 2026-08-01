@@ -49,7 +49,7 @@ A collection of 15 production-quality projects spanning AI integration, full-sta
 |---------|-------------|-------|
 | **Solara** | Real estate listings platform — debounced property search, filter state machine, Set-based favorites, map view, property detail with agent contact flow. Python/FastAPI backend with property filtering, saved listings, agent contact, and market summary endpoints. | React · Python · FastAPI |
 | **Zephyr** | HR & people operations — employee directory, onboarding progress tracker, leave request management, headcount analytics. Python/FastAPI backend with 11 endpoints covering employee CRUD, onboarding task completion, leave approval workflow, and analytics. | React · Python · FastAPI |
-| **Beacon** | Restaurant order management — live kanban order board, table occupancy grid, menu management, real-time sales analytics. Python/FastAPI backend with order status machine enforcement, table management, and analytics endpoints. | React · Python · FastAPI |
+| **Beacon** | Restaurant order management — live kanban order board, table occupancy grid, menu management, real-time sales analytics. Python/FastAPI backend deployed on Render, connected to the live React frontend. | React · Python · FastAPI |
 | **Flux** | E-commerce checkout — single-page multi-step checkout, live credit card preview, cart state machine, shipping and payment validation. Python/FastAPI backend with full cart management, Pydantic payment validation, and order processing. | React · Python · FastAPI |
 
 ---
