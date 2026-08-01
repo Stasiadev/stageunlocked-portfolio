@@ -6,7 +6,7 @@
 
 ## About
 
-A collection of 15 production-quality projects spanning AI integration, full-stack interfaces, data visualization, mobile UX, and beauty tech. Each project is built with React, with a Python/FastAPI backend for full-stack projects. Every project demonstrates senior-level engineering patterns — custom hooks, state machines, AbortController, memoization, and accessibility — applied correctly for each use case.
+A collection of 15 production-quality projects spanning AI integration, full-stack interfaces, data visualization, mobile UX, and beauty tech. Each project is built with React, with Python/FastAPI backends across all full-stack projects. Every project demonstrates senior-level engineering patterns — custom hooks, state machines, AbortController, memoization, and accessibility — applied correctly for each use case.
 
 ---
 
@@ -47,10 +47,10 @@ A collection of 15 production-quality projects spanning AI integration, full-sta
 
 | Project | Description | Stack |
 |---------|-------------|-------|
-| **Solara** | Real estate listings platform — debounced property search, filter state machine, Set-based favorites, map view, property detail with agent contact flow | React |
-| **Zephyr** | HR & people operations — employee directory with search and filter, onboarding progress tracker, leave request management, headcount analytics | React |
-| **Beacon** | Restaurant order management — live kanban order board, table occupancy grid, menu management, real-time sales analytics. Includes a Python/FastAPI backend with full REST API, Pydantic validation, and status machine enforcement. | React · Python · FastAPI |
-| **Flux** | E-commerce checkout — single-page multi-step checkout, live credit card preview, cart state machine, shipping and payment validation | React |
+| **Solara** | Real estate listings platform — debounced property search, filter state machine, Set-based favorites, map view, property detail with agent contact flow. Python/FastAPI backend with property filtering, saved listings, agent contact, and market summary endpoints. | React · Python · FastAPI |
+| **Zephyr** | HR & people operations — employee directory, onboarding progress tracker, leave request management, headcount analytics. Python/FastAPI backend with 11 endpoints covering employee CRUD, onboarding task completion, leave approval workflow, and analytics. | React · Python · FastAPI |
+| **Beacon** | Restaurant order management — live kanban order board, table occupancy grid, menu management, real-time sales analytics. Python/FastAPI backend with order status machine enforcement, table management, and analytics endpoints. | React · Python · FastAPI |
+| **Flux** | E-commerce checkout — single-page multi-step checkout, live credit card preview, cart state machine, shipping and payment validation. Python/FastAPI backend with full cart management, Pydantic payment validation, and order processing. | React · Python · FastAPI |
 
 ---
 
@@ -89,23 +89,23 @@ Every project consistently applies:
 
 ## Backend
 
-The `/backend` directory contains a Python/FastAPI backend for the Beacon project — demonstrating REST API design, Pydantic data validation, status machine enforcement, and async Python in a web development context.
+The `/backend` directory contains four Python/FastAPI backends — one for each full-stack project. Each demonstrates REST API design, Pydantic v2 data validation, enum-based status enforcement, query parameter filtering, and async Python in a web development context.
 
-| File | Description |
-|---|---|
-| `main.py` | FastAPI app — 8 endpoints covering menu, tables, orders, and analytics |
-| `models.py` | Pydantic v2 models for all request and response shapes |
-| `data.py` | Typed in-memory data store (production version would use PostgreSQL) |
-| `requirements.txt` | Dependencies: FastAPI, Uvicorn, Pydantic |
+| Backend | Endpoints | Port | Description |
+|---|---|---|---|
+| `beacon/` | 8 | 8000 | Restaurant order management — menu, tables, orders, analytics |
+| `zephyr/` | 11 | 8001 | HR platform — employee CRUD, onboarding tasks, leave approval, analytics |
+| `solara/` | 6 | 8002 | Real estate — property search and filtering, saved listings, agent contact |
+| `flux/` | 9 | 8003 | E-commerce — product catalog, cart management, checkout, order processing |
 
-**To run the backend:**
+**To run any backend:**
 ```bash
-cd backend/beacon
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
+cd backend/beacon        # or zephyr, solara, flux
+py -m pip install fastapi uvicorn[standard] pydantic python-multipart
+py -m uvicorn main:app --reload --port 8000
 ```
 
-Interactive API docs auto-generated at `http://localhost:8000/docs`
+Interactive API docs auto-generated at `http://localhost:{port}/docs`
 
 ---
 
