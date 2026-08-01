@@ -396,8 +396,28 @@ function BeaconCore() {
   if (loading) return (
     <>
       <GlobalStyles/>
-      <div className="bc-root" style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh'}}>
-        <div style={{color:'#F97316',fontSize:14,fontFamily:"'Inter',sans-serif"}}>Loading Beacon...</div>
+      <div style={{
+        fontFamily:"'Inter',sans-serif",
+        background:"#FFF8F0",
+        minHeight:"100vh",
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"center",
+        flexDirection:"column",
+        gap:12,
+      }}>
+        <div style={{
+          width:40,
+          height:40,
+          borderRadius:"50%",
+          border:"3px solid #FDE8D0",
+          borderTop:"3px solid #F97316",
+          animation:"bcSpin 0.8s linear infinite",
+        }}/>
+        <div style={{fontSize:13,color:"#9CA3AF",fontWeight:500}}>
+          Loading Beacon...
+        </div>
+        <style>{`@keyframes bcSpin { to { transform: rotate(360deg); } }`}</style>
       </div>
     </>
   );

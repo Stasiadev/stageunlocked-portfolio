@@ -7,7 +7,7 @@
  */
 
 import {
-  useState, useCallback, useMemo, useReducer, memo, Component,
+  useState, useEffect, useCallback, useMemo, useReducer, memo, Component,
 } from "react";
 import {
   Users, Search, Filter, CheckCircle, Clock, AlertCircle,
@@ -16,38 +16,9 @@ import {
   UserCheck, FileText, Bell,
 } from "lucide-react";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── API ─────────────────────────────────────────────────────────────────────
 
-const EMPLOYEES = [
-  { id:1,  name:"Jordan Pierce",    role:"Senior Engineer",      dept:"Engineering",  location:"Atlanta, GA", email:"j.pierce@co.io",   phone:"404-555-0182", joined:"Jan 2022", status:"active",  avatar:"JP", color:"#0EA5E9", level:"Senior",   manager:"Alex Kim" },
-  { id:2,  name:"Camille Dubois",   role:"Product Designer",     dept:"Design",       location:"Remote",      email:"c.dubois@co.io",   phone:"404-555-0241", joined:"Mar 2021", status:"active",  avatar:"CD", color:"#D4178A", level:"Mid",      manager:"Sam Torres" },
-  { id:3,  name:"Marcus Webb",      role:"Data Analyst",         dept:"Analytics",    location:"New York, NY",email:"m.webb@co.io",     phone:"212-555-0198", joined:"Jun 2023", status:"active",  avatar:"MW", color:"#F59E0B", level:"Junior",   manager:"Jordan Pierce" },
-  { id:4,  name:"Priya Sharma",     role:"Engineering Manager",  dept:"Engineering",  location:"Atlanta, GA", email:"p.sharma@co.io",   phone:"404-555-0317", joined:"Aug 2020", status:"active",  avatar:"PS", color:"#10B981", level:"Manager",  manager:"Alex Kim" },
-  { id:5,  name:"Devon Carter",     role:"UX Researcher",        dept:"Design",       location:"Remote",      email:"d.carter@co.io",   phone:"404-555-0429", joined:"Nov 2022", status:"leave",   avatar:"DC", color:"#8B5CF6", level:"Mid",      manager:"Sam Torres" },
-  { id:6,  name:"Aisha Okonkwo",    role:"Frontend Engineer",    dept:"Engineering",  location:"Chicago, IL", email:"a.okonkwo@co.io",  phone:"312-555-0156", joined:"Feb 2024", status:"onboarding", avatar:"AO", color:"#F97316", level:"Junior", manager:"Priya Sharma" },
-  { id:7,  name:"Lucas Ferreira",   role:"Growth Marketer",      dept:"Marketing",    location:"Remote",      email:"l.ferreira@co.io", phone:"404-555-0538", joined:"Sep 2021", status:"active",  avatar:"LF", color:"#0EA5E9", level:"Senior",   manager:"Sam Torres" },
-  { id:8,  name:"Naomi Osei",       role:"Backend Engineer",     dept:"Engineering",  location:"Atlanta, GA", email:"n.osei@co.io",     phone:"404-555-0617", joined:"Apr 2023", status:"active",  avatar:"NO", color:"#10B981", level:"Mid",      manager:"Priya Sharma" },
-];
-
-const ONBOARDING = [
-  { id:1, employee:"Aisha Okonkwo", role:"Frontend Engineer", startDate:"Jul 7, 2026", progress:65,
-    tasks:[
-      { label:"IT Setup & Equipment",        done:true  },
-      { label:"System Access & Credentials", done:true  },
-      { label:"Benefits Enrollment",         done:true  },
-      { label:"Meet Your Team",             done:false },
-      { label:"30-Day Check-In",            done:false },
-      { label:"First Project Assignment",    done:false },
-    ]
-  },
-];
-
-const LEAVE_REQUESTS = [
-  { id:1, employee:"Devon Carter",  type:"Parental Leave", start:"Jun 15", end:"Aug 15", days:43, status:"approved" },
-  { id:2, employee:"Marcus Webb",   type:"Vacation",       start:"Jul 20", end:"Jul 27", days:5,  status:"pending"  },
-  { id:3, employee:"Lucas Ferreira",type:"Sick Leave",     start:"Jul 10", end:"Jul 11", days:2,  status:"approved" },
-  { id:4, employee:"Naomi Osei",    type:"Personal Day",   start:"Jul 18", end:"Jul 18", days:1,  status:"pending"  },
-];
+const BASE_URL = 'https://zephyr-api-nhdw.onrender.com';
 
 const TABS = ["Directory","Onboarding","Leave","Analytics"];
 
@@ -91,17 +62,17 @@ const EmployeeCard = memo(function EmployeeCard({ e }) {
 
 // ─── Directory Tab ────────────────────────────────────────────────────────────
 
-const DirectoryTab = memo(function DirectoryTab() {
+const DirectoryTab = memo(function DirectoryTab({ employees }) {
   const [search, setSearch] = useState("");
   const [dept, setDept] = useState("All");
-  const depts = useMemo(()=>["All",...new Set(EMPLOYEES.map(e=>e.dept))],[]);
+  const depts = useMemo(()=>["All",...new Set(employees.map(e=>e.dept))],[employees]);
 
   const filtered = useMemo(()=>{
-    let list = EMPLOYEES;
+    let list = employees;
     if(dept!=="All") list=list.filter(e=>e.dept===dept);
     if(search) list=list.filter(e=>e.name.toLowerCase().includes(search.toLowerCase())||e.role.toLowerCase().includes(search.toLowerCase()));
     return list;
-  },[dept,search]);
+  },[employees,dept,search]);
 
   return (
     <div className="zh-tab-content">
@@ -126,21 +97,30 @@ const DirectoryTab = memo(function DirectoryTab() {
 
 // ─── Onboarding Tab ───────────────────────────────────────────────────────────
 
-const OnboardingTab = memo(function OnboardingTab() {
-  const [tasks, setTasks] = useState(ONBOARDING[0].tasks);
+const OnboardingTab = memo(function OnboardingTab({ onboarding }) {
+  const [tasks, setTasks] = useState(onboarding?.tasks ?? []);
   const completed = tasks.filter(t=>t.done).length;
-  const pct = Math.round((completed/tasks.length)*100);
-  const o = ONBOARDING[0];
+  const pct = tasks.length ? Math.round((completed/tasks.length)*100) : 0;
+  const o = onboarding;
+  const initials = o ? o.employee_name.split(" ").map(n=>n[0]).join("") : "";
+
+  if (!o) {
+    return (
+      <div className="zh-tab-content">
+        <div className="zh-onb-card">No onboarding in progress.</div>
+      </div>
+    );
+  }
 
   return (
     <div className="zh-tab-content">
       <div className="zh-onb-card">
         <div className="zh-onb-header">
-          <div className="zh-emp-avatar zh-emp-avatar--lg" style={{background:"#F97316"+"20",color:"#F97316"}}>AO</div>
+          <div className="zh-emp-avatar zh-emp-avatar--lg" style={{background:"#F97316"+"20",color:"#F97316"}}>{initials}</div>
           <div>
-            <div className="zh-onb-name">{o.employee}</div>
+            <div className="zh-onb-name">{o.employee_name}</div>
             <div className="zh-onb-role">{o.role}</div>
-            <div className="zh-onb-start"><Calendar size={11}/> Start date: {o.startDate}</div>
+            <div className="zh-onb-start"><Calendar size={11}/> Start date: {o.start_date}</div>
           </div>
           <div className="zh-progress-circle">
             <svg viewBox="0 0 44 44" width={60} height={60}>
@@ -179,11 +159,20 @@ const OnboardingTab = memo(function OnboardingTab() {
 
 // ─── Leave Tab ────────────────────────────────────────────────────────────────
 
-const LeaveTab = memo(function LeaveTab() {
-  const [requests, setRequests] = useState(LEAVE_REQUESTS);
+const LeaveTab = memo(function LeaveTab({ leaveRequests }) {
+  const [requests, setRequests] = useState(leaveRequests);
 
-  const approve = useCallback((id)=>setRequests(prev=>prev.map(r=>r.id===id?{...r,status:"approved"}:r)),[]);
-  const deny    = useCallback((id)=>setRequests(prev=>prev.map(r=>r.id===id?{...r,status:"denied"}:r)),[]);
+  const updateStatus = useCallback(async (id, status)=>{
+    await fetch(`${BASE_URL}/api/leave/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    setRequests(prev=>prev.map(r=>r.id===id?{...r,status}:r));
+  },[]);
+
+  const approve = useCallback((id)=>updateStatus(id,"approved"),[updateStatus]);
+  const deny    = useCallback((id)=>updateStatus(id,"denied"),[updateStatus]);
 
   return (
     <div className="zh-tab-content">
@@ -231,23 +220,24 @@ const LeaveTab = memo(function LeaveTab() {
 
 // ─── Analytics Tab ────────────────────────────────────────────────────────────
 
-const AnalyticsTab = memo(function AnalyticsTab() {
-  const deptCounts = useMemo(()=>{
-    const counts = {};
-    EMPLOYEES.forEach(e=>{counts[e.dept]=(counts[e.dept]||0)+1;});
-    return Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-  },[]);
+const AnalyticsTab = memo(function AnalyticsTab({ analytics }) {
+  const deptColors = {"Engineering":"#0EA5E9","Design":"#D4178A","Analytics":"#F59E0B","Marketing":"#10B981"};
+  const levelColors = {"Junior":"#F97316","Mid":"#0EA5E9","Senior":"#10B981","Manager":"#D4178A"};
 
-  const colors = {"Engineering":"#0EA5E9","Design":"#D4178A","Analytics":"#F59E0B","Marketing":"#10B981"};
+  const deptCounts = useMemo(()=>
+    [...analytics.by_department].sort((a,b)=>b.count-a.count)
+  ,[analytics]);
+
+  const activePct = analytics.total_headcount ? Math.round(analytics.active_count/analytics.total_headcount*100) : 0;
 
   return (
     <div className="zh-tab-content">
       <div className="zh-analytics-grid">
         {[
-          {label:"Total Headcount",value:EMPLOYEES.length,icon:Users,color:"#0EA5E9",change:"+2 this month"},
-          {label:"Active",value:EMPLOYEES.filter(e=>e.status==="active").length,icon:UserCheck,color:"#10B981",change:"87.5% of team"},
-          {label:"Onboarding",value:EMPLOYEES.filter(e=>e.status==="onboarding").length,icon:Coffee,color:"#F97316",change:"Avg 65% complete"},
-          {label:"On Leave",value:EMPLOYEES.filter(e=>e.status==="leave").length,icon:Calendar,color:"#8B5CF6",change:"Planned leave"},
+          {label:"Total Headcount",value:analytics.total_headcount,icon:Users,color:"#0EA5E9",change:"+2 this month"},
+          {label:"Active",value:analytics.active_count,icon:UserCheck,color:"#10B981",change:`${activePct}% of team`},
+          {label:"Onboarding",value:analytics.onboarding_count,icon:Coffee,color:"#F97316",change:"In progress"},
+          {label:"On Leave",value:analytics.on_leave_count,icon:Calendar,color:"#8B5CF6",change:"Planned leave"},
         ].map(s=>(
           <div key={s.label} className="zh-analytics-stat">
             <div className="zh-stat-icon" style={{background:`${s.color}15`}}><s.icon size={14} color={s.color}/></div>
@@ -260,11 +250,11 @@ const AnalyticsTab = memo(function AnalyticsTab() {
 
       <div className="zh-dept-breakdown">
         <div className="zh-section-label">Headcount by Department</div>
-        {deptCounts.map(([dept,count])=>(
+        {deptCounts.map(({dept,count})=>(
           <div key={dept} className="zh-dept-row">
             <span className="zh-dept-name">{dept}</span>
             <div className="zh-dept-bar-wrap">
-              <div className="zh-dept-bar" style={{width:`${(count/EMPLOYEES.length)*100}%`,background:colors[dept]||"#6366F1"}}/>
+              <div className="zh-dept-bar" style={{width:`${(count/analytics.total_headcount)*100}%`,background:deptColors[dept]||"#6366F1"}}/>
             </div>
             <span className="zh-dept-count">{count}</span>
           </div>
@@ -275,11 +265,10 @@ const AnalyticsTab = memo(function AnalyticsTab() {
         <div className="zh-section-label">Seniority Distribution</div>
         <div className="zh-level-chips">
           {["Junior","Mid","Senior","Manager"].map(level=>{
-            const count=EMPLOYEES.filter(e=>e.level===level).length;
-            const colors={"Junior":"#F97316","Mid":"#0EA5E9","Senior":"#10B981","Manager":"#D4178A"};
+            const count = analytics.by_seniority.find(s=>s.level===level)?.count ?? 0;
             return(
-              <div key={level} className="zh-level-chip" style={{borderColor:`${colors[level]}25`,background:`${colors[level]}08`}}>
-                <div className="zh-level-num" style={{color:colors[level]}}>{count}</div>
+              <div key={level} className="zh-level-chip" style={{borderColor:`${levelColors[level]}25`,background:`${levelColors[level]}08`}}>
+                <div className="zh-level-num" style={{color:levelColors[level]}}>{count}</div>
                 <div className="zh-level-label">{level}</div>
               </div>
             );
@@ -406,7 +395,56 @@ const NAV_ITEMS = [
 ];
 
 function ZephyrCore() {
+  const [employees, setEmployees] = useState([]);
+  const [onboarding, setOnboarding] = useState(null);
+  const [leaveRequests, setLeaveRequests] = useState([]);
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState(0);
+
+  useEffect(() => {
+    Promise.all([
+      fetch(`${BASE_URL}/api/employees`).then(r => r.json()),
+      fetch(`${BASE_URL}/api/onboarding`).then(r => r.json()),
+      fetch(`${BASE_URL}/api/leave`).then(r => r.json()),
+      fetch(`${BASE_URL}/api/analytics`).then(r => r.json()),
+    ]).then(([empData, onbData, leaveData, analyticsData]) => {
+      setEmployees(empData);
+      setOnboarding(onbData[0] || null);
+      setLeaveRequests(leaveData);
+      setAnalytics(analyticsData);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) return (
+    <>
+      <GlobalStyles/>
+      <div style={{
+        fontFamily:"'Inter',sans-serif",
+        background:"#F0F9FF",
+        minHeight:"100vh",
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"center",
+        flexDirection:"column",
+        gap:12,
+      }}>
+        <div style={{
+          width:40,
+          height:40,
+          borderRadius:"50%",
+          border:"3px solid #E0F2FE",
+          borderTop:"3px solid #0EA5E9",
+          animation:"zhSpin 0.8s linear infinite",
+        }}/>
+        <div style={{fontSize:13,color:"#64748B",fontWeight:500}}>
+          Loading Zephyr...
+        </div>
+        <style>{`@keyframes zhSpin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    </>
+  );
 
   return (
     <>
@@ -444,10 +482,10 @@ function ZephyrCore() {
               <button key={t} className={`zh-tab ${tab===i?"zh-tab--on":""}`} onClick={()=>setTab(i)}>{t}</button>
             ))}
           </div>
-          {tab===0&&<DirectoryTab/>}
-          {tab===1&&<OnboardingTab/>}
-          {tab===2&&<LeaveTab/>}
-          {tab===3&&<AnalyticsTab/>}
+          {tab===0&&<DirectoryTab employees={employees}/>}
+          {tab===1&&<OnboardingTab onboarding={onboarding}/>}
+          {tab===2&&<LeaveTab leaveRequests={leaveRequests}/>}
+          {tab===3&&<AnalyticsTab analytics={analytics}/>}
         </div>
       </div>
     </>
