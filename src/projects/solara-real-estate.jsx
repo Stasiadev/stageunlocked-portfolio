@@ -18,16 +18,9 @@ import {
   Calendar, Check, AlertCircle, Map,
 } from "lucide-react";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── API ─────────────────────────────────────────────────────────────────────
 
-const PROPERTIES = [
-  { id:1,  type:"House",    title:"The Oakwood",      address:"2847 Peachtree Rd NE", city:"Buckhead, GA",     price:1250000, beds:5, baths:4.5, sqft:4200, lot:"0.4 ac", built:2019, photos:8,  rating:4.9, agent:"Maya Chen",    featured:true,  tags:["Pool","Smart Home","Chef's Kitchen"], color:"#F59E0B", bg:"#FFFBEB" },
-  { id:2,  type:"Condo",    title:"Midtown Heights",  address:"1010 West Peachtree",  city:"Midtown, GA",      price:485000,  beds:2, baths:2,   sqft:1280, lot:null,      built:2021, photos:12, rating:4.7, agent:"Zara Williams", featured:false, tags:["City Views","Rooftop","Concierge"],  color:"#F97316", bg:"#FFF7ED" },
-  { id:3,  type:"Townhome", title:"Brookhaven Row",   address:"3420 Dresden Dr",      city:"Brookhaven, GA",   price:720000,  beds:3, baths:3.5, sqft:2400, lot:"0.1 ac",  built:2020, photos:9,  rating:4.8, agent:"Sofia Reyes",  featured:false, tags:["End Unit","Garage","Private Patio"], color:"#EF4444", bg:"#FEF2F2" },
-  { id:4,  type:"House",    title:"Sandy Springs Reserve", address:"512 Abernathy Rd", city:"Sandy Springs, GA", price:890000, beds:4, baths:3,   sqft:3100, lot:"0.3 ac",  built:2017, photos:14, rating:4.6, agent:"Maya Chen",    featured:false, tags:["Corner Lot","Renovated","3-Car Garage"], color:"#8B5CF6", bg:"#F5F3FF" },
-  { id:5,  type:"Condo",    title:"Ponce City Loft",  address:"675 Ponce De Leon",    city:"Old Fourth Ward, GA", price:390000, beds:1, baths:1, sqft:890,  lot:null,      built:2018, photos:7,  rating:4.5, agent:"Zara Williams", featured:false, tags:["Industrial","High Ceilings","Market Below"], color:"#10B981", bg:"#F0FDF4" },
-  { id:6,  type:"House",    title:"Druid Hills Estate", address:"1204 Ponce De Leon", city:"Druid Hills, GA",  price:2100000, beds:6, baths:5,  sqft:6800, lot:"1.2 ac",  built:1932, photos:22, rating:5.0, agent:"Sofia Reyes",  featured:true,  tags:["Historic","Pool House","Guest Suite"], color:"#F59E0B", bg:"#FFFBEB" },
-];
+const BASE_URL = 'https://solara-api-jc92.onrender.com';
 
 const TYPES    = ["All","House","Condo","Townhome"];
 const PRICE_RANGES = ["Any Price","Under $500k","$500k–$1M","$1M–$2M","$2M+"];
@@ -62,11 +55,21 @@ function useDebounce(val, delay=300) {
 
 function useSaved() {
   const [saved, setSaved] = useState(new Set([1,6]));
-  const toggle = useCallback((id)=>setSaved(prev=>{
-    const next=new Set(prev);
-    next.has(id)?next.delete(id):next.add(id);
-    return next;
-  }),[]);
+  const toggle = useCallback((id)=>{
+    const nextSaved = !saved.has(id);
+
+    fetch(`${BASE_URL}/api/properties/${id}/save`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ saved: nextSaved }),
+    });
+
+    setSaved(prev=>{
+      const next=new Set(prev);
+      nextSaved?next.add(id):next.delete(id);
+      return next;
+    });
+  },[saved]);
   return [saved, toggle];
 }
 
@@ -344,8 +347,20 @@ function SolaraCore() {
   const [saved, toggleSaved] = useSaved();
   const debouncedSearch = useDebounce(filters.search);
 
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`${BASE_URL}/api/properties`)
+      .then(r => r.json())
+      .then(data => {
+        setProperties(data);
+        setLoading(false);
+      });
+  }, []);
+
   const filtered = useMemo(()=>{
-    let list = [...PROPERTIES];
+    let list = [...properties];
     if(filters.type!=="All") list=list.filter(p=>p.type===filters.type);
     if(filters.priceRange==="Under $500k") list=list.filter(p=>p.price<500000);
     else if(filters.priceRange==="$500k–$1M") list=list.filter(p=>p.price>=500000&&p.price<1000000);
@@ -357,7 +372,43 @@ function SolaraCore() {
     else if(filters.sortBy==="price-asc") list.sort((a,b)=>a.price-b.price);
     else if(filters.sortBy==="price-desc") list.sort((a,b)=>b.price-a.price);
     return list;
-  },[filters, debouncedSearch]);
+  },[properties, filters, debouncedSearch]);
+
+  if (loading) return (
+    <>
+      <GlobalStyles/>
+      <div style={{
+        fontFamily:"'Inter',sans-serif",
+        background:"#FAFAF5",
+        minHeight:"100vh",
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"center",
+        flexDirection:"column",
+        gap:16,
+      }}>
+        <div style={{
+          fontFamily:"'Fraunces',Georgia,serif",
+          fontSize:28,
+          fontWeight:700,
+          color:"#1A1A2E",
+          letterSpacing:"-0.02em",
+        }}>Sol<span style={{color:"#F59E0B"}}>ara</span></div>
+        <div style={{
+          width:40,
+          height:40,
+          borderRadius:"50%",
+          border:"3px solid #F1EDE0",
+          borderTop:"3px solid #F59E0B",
+          animation:"slSpin 0.8s linear infinite",
+        }}/>
+        <div style={{fontSize:13,color:"#9CA3AF",fontWeight:500}}>
+          Finding properties...
+        </div>
+        <style>{`@keyframes slSpin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    </>
+  );
 
   if(selected) return (
     <>
