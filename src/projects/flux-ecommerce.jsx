@@ -15,41 +15,21 @@ import {
 import { ShoppingBag, Heart, Star, Plus, Minus, X, Check,
   ChevronRight, Package, Truck, CreditCard, AlertCircle } from "lucide-react";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// ─── API ─────────────────────────────────────────────────────────────────────
 
-const PRODUCTS = [
-  { id:1, name:"Aura Serum Pro", brand:"Lumé", price:78, originalPrice:98, rating:4.9, reviews:2847,
-    desc:"Advanced vitamin C brightening serum with hyaluronic acid complex. Clinically proven to reduce dark spots by 43% in 8 weeks.",
-    sizes:["30ml","50ml","100ml"], shades:null,
-    tags:["Bestseller","Clean Beauty","Vegan"],
-    img:"serum", color:"#C9848A" },
-  { id:2, name:"Velvet Matte Lip", brand:"Lumé", price:32, originalPrice:null, rating:4.7, reviews:1203,
-    desc:"Long-wearing matte formula that never cracks. Enriched with vitamin E and aloe for all-day comfort.",
-    sizes:null, shades:["Berry","Rose Nude","Scarlet","Mauve"],
-    tags:["New Arrival"],
-    img:"lipstick", color:"#D4178A" },
-  { id:3, name:"Glass Skin Moisturizer", brand:"Lumé", price:54, originalPrice:68, rating:4.8, reviews:934,
-    desc:"Ultra-lightweight gel-cream that delivers 72-hour hydration. The secret to the glass skin effect.",
-    sizes:["50ml","100ml"], shades:null,
-    tags:["Editor's Pick","Clean Beauty"],
-    img:"moisturizer", color:"#7B2DBE" },
-];
+const BASE_URL = 'https://flux-api-jpbv.onrender.com';
 
 const STEPS = ["Cart","Shipping","Payment","Confirmation"];
 
 // ─── State ────────────────────────────────────────────────────────────────────
+// Cart items now live server-side (fetched/mutated via the API) — this reducer
+// only tracks local UI/form state: which step we're on, and the shipping/card
+// forms in progress.
 
-const cartInit = { items:[], step:0, shipping:{ name:"",email:"",address:"",city:"",zip:"" }, card:{ num:"",exp:"",cvv:"" } };
+const cartInit = { step:0, shipping:{ name:"",email:"",address:"",city:"",state:"",zip:"" }, card:{ num:"",exp:"",cvv:"",name:"" } };
 
 function cartReducer(state, action) {
   switch(action.type) {
-    case "ADD": {
-      const existing = state.items.find(i => i.id===action.payload.id && i.variant===action.payload.variant);
-      if(existing) return { ...state, items: state.items.map(i => i.id===action.payload.id && i.variant===action.payload.variant ? {...i,qty:i.qty+1} : i) };
-      return { ...state, items:[...state.items, {...action.payload, qty:1}] };
-    }
-    case "REMOVE": return { ...state, items:state.items.filter(i=>!(i.id===action.id&&i.variant===action.variant)) };
-    case "QTY": return { ...state, items:state.items.map(i=>i.id===action.id&&i.variant===action.variant?{...i,qty:Math.max(1,action.qty)}:i) };
     case "NEXT": return { ...state, step:Math.min(state.step+1,3) };
     case "PREV": return { ...state, step:Math.max(state.step-1,0) };
     case "SHIP": return { ...state, shipping:{...state.shipping,...action.payload} };
@@ -62,31 +42,28 @@ function cartReducer(state, action) {
 // ─── Product Card ─────────────────────────────────────────────────────────────
 
 const ProductCard = memo(function ProductCard({ p, onAdd }) {
-  const [selected, setSelected] = useState(p.sizes?.[0] ?? p.shades?.[0] ?? null);
   const [wishlisted, setWishlisted] = useState(false);
   const [adding, setAdding] = useState(false);
 
-  const handleAdd = useCallback(() => {
-    onAdd({ id:p.id, name:p.name, brand:p.brand, price:p.price, variant:selected, color:p.color });
+  const handleAdd = useCallback(async () => {
     setAdding(true);
+    await onAdd(p.id);
     setTimeout(()=>setAdding(false),1200);
-  },[onAdd,p,selected]);
-
-  const discount = p.originalPrice ? Math.round((1-p.price/p.originalPrice)*100) : null;
+  },[onAdd,p.id]);
 
   return (
     <div className="fx-product">
       {/* Image area */}
-      <div className="fx-product-img" style={{ background:`linear-gradient(135deg,${p.color}18,${p.color}08)` }}>
-        <div className="fx-product-icon" style={{ background:`${p.color}20`, color:p.color }}>
-          {p.img==="serum" ? "✦" : p.img==="lipstick" ? "♡" : "◎"}
+      <div className="fx-product-img" style={{ background:`linear-gradient(135deg,${p.image_color}18,${p.image_color}08)` }}>
+        <div className="fx-product-icon" style={{ background:`${p.image_color}20`, color:p.image_color }}>
+          {p.name[0]}
         </div>
         <button className={`fx-wish ${wishlisted?"fx-wish--on":""}`} onClick={()=>setWishlisted(w=>!w)} aria-label="Add to wishlist">
           <Heart size={14} fill={wishlisted?"#D4178A":"none"} color={wishlisted?"#D4178A":"#94A3B8"} />
         </button>
         <div className="fx-tags">
-          {p.tags.map(t=><span key={t} className="fx-tag">{t}</span>)}
-          {discount&&<span className="fx-tag fx-tag--sale">-{discount}%</span>}
+          <span className="fx-tag">{p.category}</span>
+          {!p.in_stock&&<span className="fx-tag fx-tag--sale">Out of Stock</span>}
         </div>
       </div>
 
@@ -96,31 +73,26 @@ const ProductCard = memo(function ProductCard({ p, onAdd }) {
         <div className="fx-rating">
           {Array(5).fill(0).map((_,i)=><Star key={i} size={11} fill={i<Math.floor(p.rating)?"#F59E0B":"none"} color="#F59E0B"/>)}
           <span className="fx-rating-num">{p.rating}</span>
-          <span className="fx-rating-count">({p.reviews.toLocaleString()})</span>
+          <span className="fx-rating-count">({p.review_count.toLocaleString()})</span>
         </div>
-        <div className="fx-product-desc">{p.desc}</div>
+        <div className="fx-product-desc">{p.description}</div>
 
-        {/* Variants */}
-        {(p.sizes||p.shades) && (
+        {p.shade && (
           <div className="fx-variants">
-            <span className="fx-variant-label">{p.sizes?"Size":"Shade"}</span>
+            <span className="fx-variant-label">Shade</span>
             <div className="fx-variant-opts">
-              {(p.sizes||p.shades).map(v=>(
-                <button key={v} className={`fx-variant ${selected===v?"fx-variant--on":""}`}
-                  style={selected===v?{borderColor:p.color,color:p.color}:{}}
-                  onClick={()=>setSelected(v)}>{v}</button>
-              ))}
+              <span className="fx-variant fx-variant--on" style={{borderColor:p.image_color,color:p.image_color}}>{p.shade}</span>
             </div>
           </div>
         )}
 
         <div className="fx-price-row">
           <div>
-            <span className="fx-price" style={{color:p.color}}>${p.price}</span>
-            {p.originalPrice&&<span className="fx-price-orig">${p.originalPrice}</span>}
+            <span className="fx-price" style={{color:p.image_color}}>${p.price}</span>
           </div>
           <button className={`fx-add-btn ${adding?"fx-add-btn--done":""}`}
-            style={{background:adding?"#10B981":p.color}}
+            style={{background:adding?"#10B981":p.image_color}}
+            disabled={!p.in_stock}
             onClick={handleAdd} aria-label="Add to cart">
             {adding?<Check size={14}/>:<><ShoppingBag size={13}/> Add to Cart</>}
           </button>
@@ -132,11 +104,8 @@ const ProductCard = memo(function ProductCard({ p, onAdd }) {
 
 // ─── Cart ─────────────────────────────────────────────────────────────────────
 
-const CartView = memo(function CartView({ state, dispatch }) {
-  const { items } = state;
-  const subtotal = useMemo(()=>items.reduce((s,i)=>s+i.price*i.qty,0),[items]);
-  const shipping = subtotal>75 ? 0 : 8.99;
-  const total = subtotal + shipping;
+const CartView = memo(function CartView({ cart, onQtyChange, onRemove, onNext }) {
+  const items = cart?.items ?? [];
 
   if(!items.length) return (
     <div className="fx-empty">
@@ -150,35 +119,35 @@ const CartView = memo(function CartView({ state, dispatch }) {
     <div className="fx-cart">
       <div className="fx-cart-items">
         {items.map(item=>(
-          <div key={`${item.id}-${item.variant}`} className="fx-cart-item">
-            <div className="fx-cart-img" style={{background:`${item.color}18`,color:item.color}}>
-              {item.name[0]}
+          <div key={item.product_id} className="fx-cart-item">
+            <div className="fx-cart-img" style={{background:`${item.product.image_color}18`,color:item.product.image_color}}>
+              {item.product.name[0]}
             </div>
             <div className="fx-cart-info">
-              <div className="fx-cart-brand">{item.brand}</div>
-              <div className="fx-cart-name">{item.name}</div>
-              {item.variant&&<div className="fx-cart-variant">{item.variant}</div>}
+              <div className="fx-cart-brand">{item.product.brand}</div>
+              <div className="fx-cart-name">{item.product.name}</div>
+              {item.product.shade&&<div className="fx-cart-variant">{item.product.shade}</div>}
               <div className="fx-cart-controls">
                 <div className="fx-qty">
-                  <button onClick={()=>dispatch({type:"QTY",id:item.id,variant:item.variant,qty:item.qty-1})}><Minus size={11}/></button>
-                  <span>{item.qty}</span>
-                  <button onClick={()=>dispatch({type:"QTY",id:item.id,variant:item.variant,qty:item.qty+1})}><Plus size={11}/></button>
+                  <button onClick={()=>onQtyChange(item.product_id,Math.max(1,item.quantity-1))}><Minus size={11}/></button>
+                  <span>{item.quantity}</span>
+                  <button onClick={()=>onQtyChange(item.product_id,item.quantity+1)}><Plus size={11}/></button>
                 </div>
-                <span className="fx-cart-price">${(item.price*item.qty).toFixed(2)}</span>
+                <span className="fx-cart-price">${(item.product.price*item.quantity).toFixed(2)}</span>
               </div>
             </div>
-            <button className="fx-remove" onClick={()=>dispatch({type:"REMOVE",id:item.id,variant:item.variant})} aria-label="Remove item">
+            <button className="fx-remove" onClick={()=>onRemove(item.product_id)} aria-label="Remove item">
               <X size={13}/>
             </button>
           </div>
         ))}
       </div>
       <div className="fx-summary">
-        <div className="fx-summary-row"><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
-        <div className="fx-summary-row"><span>Shipping</span><span style={{color:shipping===0?"#10B981":undefined}}>{shipping===0?"Free":"$"+shipping.toFixed(2)}</span></div>
-        {subtotal<=75&&<div className="fx-free-ship">Add ${(75-subtotal).toFixed(2)} more for free shipping</div>}
-        <div className="fx-summary-row fx-summary-total"><span>Total</span><span>${total.toFixed(2)}</span></div>
-        <button className="fx-checkout-btn" onClick={()=>dispatch({type:"NEXT"})}>
+        <div className="fx-summary-row"><span>Subtotal</span><span>${cart.subtotal.toFixed(2)}</span></div>
+        <div className="fx-summary-row"><span>Shipping</span><span style={{color:cart.shipping===0?"#10B981":undefined}}>{cart.shipping===0?"Free":"$"+cart.shipping.toFixed(2)}</span></div>
+        <div className="fx-summary-row"><span>Tax</span><span>${cart.tax.toFixed(2)}</span></div>
+        <div className="fx-summary-row fx-summary-total"><span>Total</span><span>${cart.total.toFixed(2)}</span></div>
+        <button className="fx-checkout-btn" onClick={onNext}>
           Checkout <ChevronRight size={15}/>
         </button>
       </div>
@@ -195,7 +164,7 @@ const ShippingView = memo(function ShippingView({ state, dispatch }) {
   return (
     <div className="fx-form-view">
       <div className="fx-form-grid">
-        {[["Full Name","name","Your name","text"],["Email","email","your@email.com","email"],["Address","address","123 Main Street","text"],["City","city","Atlanta","text"],["ZIP Code","zip","30301","text"]].map(([label,key,ph,type])=>(
+        {[["Full Name","name","Your name","text"],["Email","email","your@email.com","email"],["Address","address","123 Main Street","text"],["City","city","Atlanta","text"],["State","state","GA","text"],["ZIP Code","zip","30301","text"]].map(([label,key,ph,type])=>(
           <div key={key} className={`fx-field ${key==="address"||key==="name"?"fx-field--full":""}`}>
             <label className="fx-label" htmlFor={`${id}-${key}`}>{label}</label>
             <input id={`${id}-${key}`} className="fx-input" type={type} placeholder={ph} value={shipping[key]}
@@ -211,10 +180,10 @@ const ShippingView = memo(function ShippingView({ state, dispatch }) {
   );
 });
 
-const PaymentView = memo(function PaymentView({ state, dispatch }) {
+const PaymentView = memo(function PaymentView({ state, dispatch, onPlaceOrder, placingOrder }) {
   const id = useId();
   const { card } = state;
-  const ok = useMemo(()=>card.num.replace(/\s/g,"").length>=16&&card.exp.length>=5&&card.cvv.length>=3,[card]);
+  const ok = useMemo(()=>card.num.replace(/\s/g,"").length>=16&&card.exp.length>=5&&card.cvv.length>=3&&card.name.trim().length>0,[card]);
   const formatCard = useCallback(v=>v.replace(/\D/g,"").slice(0,16).replace(/(.{4})/g,"$1 ").trim(),[]);
   const formatExp = useCallback(v=>v.replace(/\D/g,"").slice(0,4).replace(/^(\d{2})/,"$1/"),[]);
   return (
@@ -228,6 +197,10 @@ const PaymentView = memo(function PaymentView({ state, dispatch }) {
         </div>
       </div>
       <div className="fx-form-grid" style={{marginTop:20}}>
+        <div className="fx-field fx-field--full">
+          <label className="fx-label" htmlFor={`${id}-name`}>Name on Card</label>
+          <input id={`${id}-name`} className="fx-input" placeholder="Your name" value={card.name} onChange={e=>dispatch({type:"CARD",payload:{name:e.target.value}})}/>
+        </div>
         <div className="fx-field fx-field--full">
           <label className="fx-label" htmlFor={`${id}-num`}>Card Number</label>
           <input id={`${id}-num`} className="fx-input" placeholder="1234 5678 9012 3456" value={card.num} onChange={e=>dispatch({type:"CARD",payload:{num:formatCard(e.target.value)}})}/>
@@ -243,7 +216,7 @@ const PaymentView = memo(function PaymentView({ state, dispatch }) {
       </div>
       <div className="fx-form-actions">
         <button className="fx-back-btn" onClick={()=>dispatch({type:"PREV"})}>← Back</button>
-        <button className="fx-next-btn" disabled={!ok} onClick={()=>dispatch({type:"NEXT"})}>Place Order <ChevronRight size={14}/></button>
+        <button className="fx-next-btn" disabled={!ok||placingOrder} onClick={onPlaceOrder}>{placingOrder?"Placing Order...":"Place Order"} <ChevronRight size={14}/></button>
       </div>
     </div>
   );
@@ -251,23 +224,24 @@ const PaymentView = memo(function PaymentView({ state, dispatch }) {
 
 // ─── Confirmation ─────────────────────────────────────────────────────────────
 
-const ConfirmView = memo(function ConfirmView({ state, dispatch }) {
-  const total = useMemo(()=>state.items.reduce((s,i)=>s+i.price*i.qty,0),[state.items]);
+const ConfirmView = memo(function ConfirmView({ order, dispatch }) {
+  if(!order) return null;
+  const firstName = order.shipping?.first_name || "there";
   return (
     <div className="fx-confirm">
       <div className="fx-confirm-icon"><Check size={28} color="#10B981"/></div>
       <h2 className="fx-confirm-title">Order Confirmed!</h2>
-      <p className="fx-confirm-sub">Thank you, {state.shipping.name.split(" ")[0]}. Your order is on its way.</p>
-      <div className="fx-order-num">Order #FX-{Math.floor(Math.random()*900000+100000)}</div>
+      <p className="fx-confirm-sub">Thank you, {firstName}. Your order is on its way.</p>
+      <div className="fx-order-num">Order #{order.id}</div>
       <div className="fx-confirm-steps">
-        {[{Icon:Package,label:"Processing",done:true},{Icon:Truck,label:"Shipping to "+state.shipping.city,done:false},{Icon:Check,label:"Delivered",done:false}].map(({Icon,label,done},i)=>(
+        {[{Icon:Package,label:"Processing",done:true},{Icon:Truck,label:"Shipping to "+(order.shipping?.city||""),done:false},{Icon:Check,label:"Delivered",done:false}].map(({Icon,label,done},i)=>(
           <div key={i} className={`fx-conf-step ${done?"fx-conf-step--done":""}`}>
             <div className="fx-conf-dot"><Icon size={13}/></div>
             <span>{label}</span>
           </div>
         ))}
       </div>
-      <div className="fx-confirm-total">Total charged: ${(total+8.99).toFixed(2)}</div>
+      <div className="fx-confirm-total">Total charged: ${Number(order.total).toFixed(2)}</div>
       <button className="fx-checkout-btn" style={{marginTop:16}} onClick={()=>dispatch({type:"RESET"})}>Continue Shopping</button>
     </div>
   );
@@ -326,6 +300,13 @@ const GlobalStyles = ()=>(
     .fx-price-orig{font-size:13px;color:#94A3B8;text-decoration:line-through;margin-left:4px;}
     .fx-add-btn{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;border:none;color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:background 0.2s,transform 0.1s;font-family:'Inter',sans-serif;}
     .fx-add-btn:active{transform:scale(0.97);}
+    .fx-add-btn:disabled{opacity:0.4;cursor:not-allowed;}
+    .fx-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#FAFBFC;gap:16px;}
+    .fx-loading-brand{font-size:24px;font-weight:700;color:#0F172A;letter-spacing:-0.02em;}
+    .fx-loading-brand span{background:linear-gradient(135deg,#D4178A,#7B2DBE);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .fx-loading-spinner{width:36px;height:36px;border-radius:50%;border:3px solid #FCE7F3;border-top-color:#D4178A;animation:flSpin 0.8s linear infinite;}
+    .fx-loading-text{font-size:13px;color:#64748B;}
+    @keyframes flSpin{to{transform:rotate(360deg);}}
     .fx-sidebar{display:flex;flex-direction:column;gap:0;}
     .fx-checkout-panel{background:#fff;border:1px solid #F1F5F9;border-radius:16px;overflow:hidden;}
     .fx-checkout-header{padding:16px 20px;border-bottom:1px solid #F1F5F9;}
@@ -398,9 +379,94 @@ const GlobalStyles = ()=>(
 
 function FluxCore() {
   const [state, dispatch] = useReducer(cartReducer, cartInit);
-  const itemCount = useMemo(()=>state.items.reduce((s,i)=>s+i.qty,0),[state.items]);
+  const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState(null);
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [placingOrder, setPlacingOrder] = useState(false);
 
-  const handleAdd = useCallback((item)=>dispatch({type:"ADD",payload:item}),[]);
+  useEffect(()=>{
+    Promise.all([
+      fetch(`${BASE_URL}/api/products`).then(r=>r.json()),
+      fetch(`${BASE_URL}/api/cart`).then(r=>r.json()),
+    ]).then(([productsData, cartData])=>{
+      setProducts(productsData);
+      setCart(cartData);
+      setLoading(false);
+    });
+  },[]);
+
+  const itemCount = cart?.item_count ?? 0;
+
+  const handleAdd = useCallback(async (productId)=>{
+    const res = await fetch(`${BASE_URL}/api/cart`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({product_id:productId, quantity:1}),
+    });
+    setCart(await res.json());
+  },[]);
+
+  const handleQtyChange = useCallback(async (productId, quantity)=>{
+    const res = await fetch(`${BASE_URL}/api/cart/${productId}`,{
+      method:"PATCH",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({quantity}),
+    });
+    setCart(await res.json());
+  },[]);
+
+  const handleRemove = useCallback(async (productId)=>{
+    const res = await fetch(`${BASE_URL}/api/cart/${productId}`,{method:"DELETE"});
+    setCart(await res.json());
+  },[]);
+
+  const handlePlaceOrder = useCallback(async ()=>{
+    setPlacingOrder(true);
+    const [firstName, ...rest] = state.shipping.name.trim().split(" ");
+    const payload = {
+      shipping:{
+        first_name: firstName || "",
+        last_name: rest.join(" ") || "",
+        email: state.shipping.email,
+        address: state.shipping.address,
+        city: state.shipping.city,
+        state: state.shipping.state,
+        zip_code: state.shipping.zip,
+      },
+      payment:{
+        card_number: state.card.num.replace(/\s/g,""),
+        expiry: state.card.exp,
+        cvv: state.card.cvv,
+        name_on_card: state.card.name,
+      },
+    };
+    try{
+      const res = await fetch(`${BASE_URL}/api/orders`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload),
+      });
+      const data = await res.json();
+      setOrder(data);
+      dispatch({type:"NEXT"});
+    } finally {
+      setPlacingOrder(false);
+    }
+  },[state.shipping, state.card]);
+
+  if(loading){
+    return (
+      <>
+        <GlobalStyles/>
+        <div className="fx-loading">
+          <div className="fx-loading-brand fx-serif">Lumé <span>Beauty</span></div>
+          <div className="fx-loading-spinner"/>
+          <p className="fx-loading-text">Loading your store...</p>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -419,7 +485,7 @@ function FluxCore() {
           <div>
             <h1 className="fx-section-title fx-serif">Clean Beauty Essentials</h1>
             <div className="fx-products-grid">
-              {PRODUCTS.map(p=><ProductCard key={p.id} p={p} onAdd={handleAdd}/>)}
+              {products.map(p=><ProductCard key={p.id} p={p} onAdd={handleAdd}/>)}
             </div>
           </div>
 
@@ -440,10 +506,10 @@ function FluxCore() {
                 ))}
               </div>
               <div className="fx-panel-body">
-                {state.step===0&&<CartView state={state} dispatch={dispatch}/>}
+                {state.step===0&&<CartView cart={cart} onQtyChange={handleQtyChange} onRemove={handleRemove} onNext={()=>dispatch({type:"NEXT"})}/>}
                 {state.step===1&&<ShippingView state={state} dispatch={dispatch}/>}
-                {state.step===2&&<PaymentView state={state} dispatch={dispatch}/>}
-                {state.step===3&&<ConfirmView state={state} dispatch={dispatch}/>}
+                {state.step===2&&<PaymentView state={state} dispatch={dispatch} onPlaceOrder={handlePlaceOrder} placingOrder={placingOrder}/>}
+                {state.step===3&&<ConfirmView order={order} dispatch={dispatch}/>}
               </div>
             </div>
           </div>
